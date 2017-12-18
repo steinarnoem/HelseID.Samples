@@ -16,8 +16,7 @@ namespace HelseID.Test.WPF.Common
             var request = (HttpWebRequest)WebRequest.Create(url);
             
             request.Timeout = 120;
-            request.AllowAutoRedirect = true;
-            request.Method = "HEAD";
+            request.AllowAutoRedirect = true;            
 
             try
             {
@@ -42,18 +41,6 @@ namespace HelseID.Test.WPF.Common
                 MessageBox.Show($"Det oppstod en feil når vi sjekker om STSen er tilgjengelig for applikasjonen.{Environment.NewLine}Feilmelding: {e.Message}");
                 return false;
             }
-            //catch (WebException e)
-            //{
-            //    if (e.Response == null)
-            //        MessageBox.Show("Kunne ikke sjekke http response");
-            //    using (WebResponse response = e.Response)
-            //    {
-            //        HttpWebResponse httpResponse = (HttpWebResponse)response;
-            //        Console.WriteLine("Error code: {0}", httpResponse.StatusCode);
-            //        return false;
-            //    }
-            //}
-
         }
     }
 }

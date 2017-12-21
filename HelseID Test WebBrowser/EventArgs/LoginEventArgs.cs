@@ -1,5 +1,4 @@
-﻿using IdentityModel.Client;
-using IdentityModel.OidcClient;
+﻿using IdentityModel.OidcClient;
 
 namespace HelseID.Test.WPF.WebBrowser.EventArgs
 {

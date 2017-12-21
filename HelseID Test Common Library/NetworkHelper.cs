@@ -16,7 +16,12 @@ namespace HelseID.Test.WPF.Common
             var request = (HttpWebRequest)WebRequest.Create(url);
             
             request.Timeout = 120;
-            request.AllowAutoRedirect = true;            
+            request.AllowAutoRedirect = true;
+            request.Proxy = WebRequest.DefaultWebProxy;
+            request.UseDefaultCredentials = true;
+            
+            if (request.Proxy.Credentials != null)
+                MessageBox.Show(request.Proxy.Credentials.ToString());
 
             try
             {

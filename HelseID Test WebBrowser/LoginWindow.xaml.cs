@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Navigation;
 using HelseID.Test.WPF.Common;
 using HelseID.Test.WPF.WebBrowser.EventArgs;
-using IdentityModel.Client;
 using IdentityModel.OidcClient;
 
 namespace HelseID.Test.WPF.WebBrowser
@@ -54,7 +53,7 @@ namespace HelseID.Test.WPF.WebBrowser
             var uri = e.Uri.ToString();
             if (uri != _clientOptions.RedirectUri) return;
             
-            await HandleLogin(e);            
+            await HandleLogin(e);
         }
 
         private async Task HandleLogin(NavigatingCancelEventArgs e)

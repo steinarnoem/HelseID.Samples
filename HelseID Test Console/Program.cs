@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using HelseID.Test.WPF.Common;
-using Microsoft.IdentityModel.Tokens;
 
 namespace HelseID_Test_Console
 {
@@ -14,58 +9,42 @@ namespace HelseID_Test_Console
     {
         static void Main(string[] args)
         {                        
-            var helper = new CryptoKeyGenerator();
-
-            var keyPairExists = helper.KeyExists();
+            var keyPairExists = RSAKeyGenerator.KeyExists();
             if (keyPairExists)
             {
                 Console.WriteLine("Using exisiting key pair:");
-                var key = helper.GetKeyAsXml();
+                var key = RSAKeyGenerator.CreateNewKey(true);
                 Console.WriteLine(key);
             }
             else
             {
                 Console.WriteLine("Created new key pair:");
-                var key = helper.GetKeyAsXml();
+                var key = RSAKeyGenerator.CreateNewKey(true);
                 Console.WriteLine(key);
             }
 
-            ConsoleKeyInfo pressedKey;
-            Console.WriteLine("To check if key pair exists, press Enter");
-            pressedKey = Console.ReadKey();
+            Console.WriteLine("To check if key pair exists, press Enter:");
+            var pressedKey = Console.ReadKey();
 
             if (pressedKey.Key == ConsoleKey.Enter)
             {
-                var exists = helper.KeyExists();
-                if (exists)
-                {
-                    Console.WriteLine("Keypair exists!!");
-                    CreateJwt();
-                }
-                else
-                {
-                    Console.WriteLine("Keypair does NOT exist!!");
-                }                
+                var exists = RSAKeyGenerator.KeyExists();
+                Console.WriteLine(exists ? "Keypair exists! :)" : "Keypair does NOT exist! :(");
             }
 
             Console.WriteLine("To delete key pair, press enter");
             pressedKey = Console.ReadKey();
             if (pressedKey.Key == ConsoleKey.Enter)
-                helper.DeleteKey();
+                RSAKeyGenerator.DeleteKey();
+            else
+            {
+                Console.WriteLine("Creating JWT");                
+                var jwt = JwtHelper.GenerateJwt("my_client_id", JwtHelper.ValidAudiences[0], null);
 
-        }
+                var isValid = JwtHelper.ValidateToken(jwt, JwtHelper.ValidAudiences[0]);
 
-        private static void CreateJwt()
-        {
-            var helper = new CryptoKeyGenerator();
-            var rsa = helper.GetRsa();
-                        
-            var securityKey = new RsaSecurityKey(rsa);
-            var signingCredentials = new SigningCredentials(securityKey, rsa.SignatureAlgorithm);
-            var token = new JwtSecurityToken(signingCredentials: signingCredentials, audience: "https://helseid-dummy.nhn.no", expires: DateTime.Now.AddHours(12), issuer:"https://tykkeklienter.no");
-
-            var test = token;
-
+                Console.WriteLine("The generated JWT was valid :)");
+            }
         }
     }
 }

@@ -48,14 +48,16 @@ namespace HelseID.Test.WPF
         {
             var options = GetClientConfiguration();
 
-            if (!NetworkHelper.StsIsAvailable(options.Authority))
-            {
-                MessageBox.Show("Kunne ikke nå adressen:" + options.Authority);
-            }
-            var client = new OidcClient(options);
+            //if (!NetworkHelper.StsIsAvailable(options.Authority))
+            //{
+            //    MessageBox.Show("Kunne ikke nå adressen:" + options.Authority);
+            //}
+
+            var client = new OidcClient(options);            
 
             try
             {                
+                
                 var state = await client.PrepareLoginAsync(GetExtraParameters());
                 _browserManager.Start(state.StartUrl);
 
@@ -167,8 +169,7 @@ namespace HelseID.Test.WPF
                 ClientId = string.IsNullOrEmpty(clientId) ? DefaultClientConfigurationValues.DefaultClientId : clientId,
                 RedirectUri = RequestHandler.DefaultUri,
                 Scope = string.IsNullOrEmpty(scope) ? DefaultClientConfigurationValues.DefaultScope : scope,
-                ClientSecret = string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,
-                
+                ClientSecret = string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,                
             };
 
             if (UseADFSCheckBox.IsChecked.HasValue && UseADFSCheckBox.IsChecked.Value)

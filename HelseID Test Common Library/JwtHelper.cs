@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HelseID.Test.WPF.Common
@@ -54,7 +51,7 @@ namespace HelseID.Test.WPF.Common
 
         private static SigningCredentials GetSigningCredentials()
         {            
-            var rsa = RSAKeyGenerator.GetRsa();
+            var rsa = RSAKeyGenerator.GetRsaParameters();
             var securityKey = new RsaSecurityKey(rsa);
 
             var signingCredentials = new SigningCredentials(securityKey, RSAKeyGenerator.JwsAlgorithmName);

@@ -93,6 +93,27 @@ namespace HelseID.Test.WPF.Common
             }
         }
 
+        public static RSAParameters GetRsaParameters()
+        {
+            try
+            {
+                Debug.WriteLine("Trying to open existing CngKey");
+                var cngKey = CngKey.Open(KeyName);
+
+                using (cngKey)
+                using (RSA rsa = new RSACng(cngKey))
+                {
+                    return rsa.ExportParameters(true);
+                }
+            }
+            catch (CryptographicException e)
+            {
+                Debug.WriteLine($"Unable to open CngKey.{Environment.NewLine}{e.Message}{Environment.NewLine}{e.StackTrace}");
+                throw new Exception("An exception occurred while opening a CngKey");
+            }
+        }
+
+
         public static string GetPublicKeyAsXml()
         {
             try

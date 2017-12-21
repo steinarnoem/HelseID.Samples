@@ -41,6 +41,11 @@ namespace HelseID_Test_Console
                 Console.WriteLine("Creating JWT");                
                 var jwt = JwtHelper.GenerateJwt("my_client_id", JwtHelper.ValidAudiences[0], null);
 
+                Console.WriteLine(jwt);
+
+                Console.WriteLine("Press key to continue:");
+                pressedKey = Console.ReadKey();
+
                 var isValid = JwtHelper.ValidateToken(jwt, JwtHelper.ValidAudiences[0]);
 
                 Console.WriteLine("The generated JWT was valid :)");

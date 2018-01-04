@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using HelseID.Test.WPF.Common.Controls;
 using HelseID.Test.WPF.Common;
 using HelseID.Test.WPF.WebBrowser.EventArgs;
 using HelseID.Test.WPF.WebBrowser.Model;
@@ -150,7 +151,7 @@ namespace HelseID.Test.WPF.WebBrowser
 
         private static void ShowTokenViewer(string content)
         {
-            var view = new TokenViewer { Token = content };
+            var view = new TokenViewerWindow { Token = content };
             view.ShowDialog();
         }
     }

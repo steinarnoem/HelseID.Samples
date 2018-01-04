@@ -150,9 +150,6 @@
     <Compile Include="TextViewer.xaml.cs">
       <DependentUpon>TextViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TokenViewer.xaml.cs">
-      <DependentUpon>TokenViewer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Model\WebBrowserDocument.cs" />
     <Page Include="ApiWindow.xaml">
       <SubType>Designer</SubType>
@@ -178,10 +175,6 @@
     <Page Include="TextViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TokenViewer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +208,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HelseID Test Common Controls\HelseID Test Common Controls.csproj">
+      <Project>{9138EA1E-C1A9-4201-B47D-4064D788A850}</Project>
+      <Name>HelseID Test Common Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HelseID Test Common Library\HelseID Test Common Library.csproj">
       <Project>{ECA95D1F-2836-4326-AF90-F6530DA66CE8}</Project>
       <Name>HelseID Test Common Library</Name>

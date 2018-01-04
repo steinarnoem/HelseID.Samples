@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID Test Common Library
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID Test Console", "HelseID Test Console\HelseID Test Console.csproj", "{3C2E87B0-55C6-41C2-A47A-A544AC09D597}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID Test Common Controls", "HelseID Test Common Controls\HelseID Test Common Controls.csproj", "{9138EA1E-C1A9-4201-B47D-4064D788A850}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{3C2E87B0-55C6-41C2-A47A-A544AC09D597}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C2E87B0-55C6-41C2-A47A-A544AC09D597}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C2E87B0-55C6-41C2-A47A-A544AC09D597}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9138EA1E-C1A9-4201-B47D-4064D788A850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9138EA1E-C1A9-4201-B47D-4064D788A850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9138EA1E-C1A9-4201-B47D-4064D788A850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9138EA1E-C1A9-4201-B47D-4064D788A850}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,15 +1,15 @@
 ﻿using System.Windows;
 
-namespace HelseID.Test.WPF
+namespace HelseID.Test.WPF.Common.Controls
 {
     /// <summary>
     /// Interaction logic for TextViewer.xaml
     /// </summary>
-    public partial class TextViewer : Window
+    public partial class TextViewerWindow : Window
     {
         public string Text { get; set; }
 
-        public TextViewer()
+        public TextViewerWindow()
         {
             InitializeComponent();
         }

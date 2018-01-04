@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using HelseID.Test.WPF.Common.Controls;
 using HelseID.Test.WPF.Common;
 using IdentityModel.OidcClient;
 using Newtonsoft.Json;
@@ -144,7 +145,7 @@ namespace HelseID.Test.WPF
 
         private static void ShowTokenViewer(string content)
         {
-            var view = new TokenViewer { Token = content };
+            var view = new TokenViewerWindow { Token = content };
             view.ShowDialog();
         }
 
@@ -191,7 +192,7 @@ namespace HelseID.Test.WPF
 
         private void LogOutButton_Click(object sender, RoutedEventArgs e)
         {            
-            MessageBox.Show("Close your browser window to log out :)");
+            MessageBox.Show("Close your browser window to log out ;)");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -258,33 +259,30 @@ namespace HelseID.Test.WPF
                 return;
             }
                 
-            var apiWindow = new ApiWindow();
+            var apiWindow = new ApiSettingsWindow();
             var result = apiWindow.ShowDialog();
 
-            var apiUrl = string.Empty;
+            if (!result.HasValue || !result.Value) return;
 
-            if (result.HasValue && result.Value)
+            var apiUrl = apiWindow.ApiAddress;
+
+            try
             {
-                apiUrl = apiWindow.ApiAddress;
+                var url = new Uri(apiUrl);
 
-                try
-                {
-                    var url = new Uri(apiUrl);
+                if (!url.IsWellFormedOriginalString())
+                    throw new UriFormatException();
 
-                    if (!url.IsWellFormedOriginalString())
-                        throw new UriFormatException();
-
-                    CallApi(url);
-                }
-                catch (UriFormatException uriFormatException)
-                {
-                    MessageBox.Show($"The Url you entered was invalid : {uriFormatException.Message}");
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.Message);
-                    throw;
-                }                
+                CallApi(url);
+            }
+            catch (UriFormatException uriFormatException)
+            {
+                MessageBox.Show($"The Url you entered was invalid : {uriFormatException.Message}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw;
             }
         }
 
@@ -300,18 +298,28 @@ namespace HelseID.Test.WPF
             client.BaseAddress = url;
 
             client.SetBearerToken(_loginResult.AccessToken);
-            var result = await client.GetAsync(url);
+            try
+            {
+                var result = await client.GetAsync(url);
 
-            result.EnsureSuccessStatusCode();
+                result.EnsureSuccessStatusCode();
 
-            var content = await result.Content.ReadAsStringAsync();
-            
-            var json = JArray.Parse(content).ToString();
+                var content = await result.Content.ReadAsStringAsync();
 
-            var viewer = new TextViewer(){Text = json};
+                var json = JArray.Parse(content).ToString();
 
-            viewer.ShowDialog();
+                var viewer = new TextViewerWindow {Text = json};
 
+                viewer.ShowDialog();
+            }
+            catch (HttpRequestException requestException)
+            {
+                MessageBox.Show($"{requestException.Message}. The request failed due to an underlying issue such as network connectivity, DNS failure, server certificate validation or timeout.");
+            }
+            finally
+            {
+                client.Dispose();
+            }
         }
     }
 }

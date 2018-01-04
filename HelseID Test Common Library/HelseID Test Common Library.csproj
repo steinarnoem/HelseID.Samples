@@ -71,7 +71,7 @@
   <ItemGroup>
     <Compile Include="Authorities.cs" />
     <Compile Include="CryptoHelper.cs" />
-    <Compile Include="JwtHelper.cs" />
+    <Compile Include="JwtGenerator.cs" />
     <Compile Include="RSAKeyGenerator.cs" />
     <Compile Include="DefaultClientConfigurationValues.cs" />
     <Compile Include="NetworkHelper.cs" />
@@ -79,7 +79,6 @@
     <Compile Include="Scopes.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="TokenExtensions.cs" />
-    <Compile Include="WebBrowserControlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

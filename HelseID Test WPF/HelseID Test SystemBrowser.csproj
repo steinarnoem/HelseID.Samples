@@ -126,11 +126,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ApiWindow.xaml.cs">
+      <DependentUpon>ApiWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RequestHandler.cs" />
     <Compile Include="SystemBrowserManager.cs" />
+    <Compile Include="TextViewer.xaml.cs">
+      <DependentUpon>TextViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TokenViewer.xaml.cs">
       <DependentUpon>TokenViewer.xaml</DependentUpon>
     </Compile>
+    <Page Include="ApiWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -143,6 +153,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TextViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TokenViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

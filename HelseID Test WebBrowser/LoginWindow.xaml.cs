@@ -5,7 +5,9 @@ using System.Windows;
 using System.Windows.Navigation;
 using HelseID.Test.WPF.Common;
 using HelseID.Test.WPF.WebBrowser.EventArgs;
+using HelseID.Test.WPF.WebBrowser.Model;
 using IdentityModel.OidcClient;
+using mshtml;
 
 namespace HelseID.Test.WPF.WebBrowser
 {
@@ -58,8 +60,8 @@ namespace HelseID.Test.WPF.WebBrowser
 
         private async Task HandleLogin(NavigatingCancelEventArgs e)
         {
-            var responseData = WebBrowserControlHelper.GetResponseDataFromFormPostPage(webBrowser);
-            var result = await _client.ProcessResponseAsync(responseData, _state);            
+            var response = new WebBrowserDocument((IHTMLDocument3)webBrowser.Document);
+            var result = await _client.ProcessResponseAsync(response.Data, _state);            
 
             if (result.IsError)
             {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID Test WPF", "HelseID Test WPF\HelseID Test WPF.csproj", "{1665423A-C3E6-4935-9BFA-33ABF2E4F6B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID Test SystemBrowser", "HelseID Test WPF\HelseID Test SystemBrowser.csproj", "{1665423A-C3E6-4935-9BFA-33ABF2E4F6B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID Test WebBrowser", "HelseID Test WebBrowser\HelseID Test WebBrowser.csproj", "{ED57C1C7-D2E3-481F-849A-28BC7219F97F}"
 EndProject

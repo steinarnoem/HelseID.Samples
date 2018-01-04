@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using HelseID.Test.WPF.Common;
 using IdentityModel.OidcClient;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace HelseID.Test.WPF
 {
@@ -17,7 +20,7 @@ namespace HelseID.Test.WPF
         private readonly SystemBrowserManager _browserManager;
         private readonly RequestHandler _requestHandler;
         private LoginResult _loginResult;
-        private List<string> _configuredScopes = new List<string>();
+        private readonly List<string> _configuredScopes = new List<string>();
 
         public MainWindow()
         {
@@ -88,7 +91,7 @@ namespace HelseID.Test.WPF
         {
             var result = await client.ProcessResponseAsync(formData, state);
 
-            HandleResult(result);
+            HandleLoginResult(result);
 
             Dispatcher.Invoke(() =>
             {
@@ -99,7 +102,7 @@ namespace HelseID.Test.WPF
             });
         }
 
-        public void HandleResult(LoginResult result)
+        public void HandleLoginResult(LoginResult result)
         {
             if ((result == null) || (result.IsError))
             {
@@ -147,7 +150,6 @@ namespace HelseID.Test.WPF
 
         private void SetDefaultClientConfiguration()
         {
-            //AuthorityTextBox.Text = DefaultClientConfigurationValues.DefaultAuthority;
             ClientIdTextBox.Text = DefaultClientConfigurationValues.DefaultClientId;
             _configuredScopes.Add(DefaultClientConfigurationValues.DefaultScope);
             SecretTextBox.Text = DefaultClientConfigurationValues.DefaultSecret;
@@ -158,7 +160,6 @@ namespace HelseID.Test.WPF
 
         public OidcClientOptions GetClientConfiguration()
         {
-            //var authority = AuthorityTextBox.Text;
             var authority = AuthoritiesComboBox.SelectedValue as string;
             var clientId = ClientIdTextBox.Text.Trim();
             var scope = ScopeTextBox.Text.Replace(Environment.NewLine, " ");
@@ -177,9 +178,10 @@ namespace HelseID.Test.WPF
                 options.Policy =
                     new Policy()
                     {
-                        RequireAccessTokenHash = false //ADFS 2016 spesifikk kode - ikke krev hash for access_token
+                        RequireAccessTokenHash = false //ADFS 2016 spesific code - don't require hash for access_token
                     };
             }
+
             options.BrowserTimeout = TimeSpan.FromSeconds(5);
 
             options.Flow = OidcClientOptions.AuthenticationFlow.Hybrid;
@@ -188,9 +190,8 @@ namespace HelseID.Test.WPF
         }
 
         private void LogOutButton_Click(object sender, RoutedEventArgs e)
-        {
-            //Implement signout? Gir kanskje ikke så mye mening, 
-            MessageBox.Show("Lukk nettleservinduet for å logge ut :)");
+        {            
+            MessageBox.Show("Close your browser window to log out :)");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -247,6 +248,70 @@ namespace HelseID.Test.WPF
         {
             ScopeTextBox.Text = string.Join(Environment.NewLine, _configuredScopes);
             ScopeTextBox.Text = string.Join(Environment.NewLine, _configuredScopes);
+        }
+
+        private void CallApiButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_loginResult == null)
+            {
+                MessageBox.Show("You need to authenticate before you can call the API");
+                return;
+            }
+                
+            var apiWindow = new ApiWindow();
+            var result = apiWindow.ShowDialog();
+
+            var apiUrl = string.Empty;
+
+            if (result.HasValue && result.Value)
+            {
+                apiUrl = apiWindow.ApiAddress;
+
+                try
+                {
+                    var url = new Uri(apiUrl);
+
+                    if (!url.IsWellFormedOriginalString())
+                        throw new UriFormatException();
+
+                    CallApi(url);
+                }
+                catch (UriFormatException uriFormatException)
+                {
+                    MessageBox.Show($"The Url you entered was invalid : {uriFormatException.Message}");
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.Message);
+                    throw;
+                }                
+            }
+        }
+
+        private async void CallApi(Uri url)
+        {
+            var client = new HttpClient();
+
+            if (_loginResult == null)
+            {                
+                return;
+            }
+
+            client.BaseAddress = url;
+
+            client.SetBearerToken(_loginResult.AccessToken);
+            var result = await client.GetAsync(url);
+
+            result.EnsureSuccessStatusCode();
+
+            var content = await result.Content.ReadAsStringAsync();
+            
+            var json = JArray.Parse(content).ToString();
+
+            var viewer = new TextViewer(){Text = json};
+
+            viewer.ShowDialog();
+
         }
     }
 }

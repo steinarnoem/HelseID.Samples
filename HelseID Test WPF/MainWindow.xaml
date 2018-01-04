@@ -44,7 +44,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="0,0,8,0" Grid.Column="2">
                 <Button x:Name="LoginButton" Content="Log in" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="Button_Click"/>
                 <Button x:Name="LogOutButton" Content="Log out" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" Click="LogOutButton_Click"/>
-                <Button x:Name="CallApiButton" Content="Kall API" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" IsEnabled="False"/>
+                <Button x:Name="CallApiButton" Content="Kall API" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" Click="CallApiButton_Click"/>
             </StackPanel>
             <Label Content="RedirectUrl:" HorizontalAlignment="Left" Margin="7,6,0,0" VerticalAlignment="Top" Width="78" Grid.Row="3" Height="26" Grid.Column="1" Grid.ColumnSpan="2"/>
             <TextBox x:Name="RedirectUrlTextBox" Margin="10,9,12,11" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="3"/>

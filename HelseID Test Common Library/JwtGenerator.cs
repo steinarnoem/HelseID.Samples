@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace HelseID.Test.WPF.Common
 {
-    public class JwtHelper
+    public class JwtGenerator
     {
         public static List<string> ValidAudiences = new List<string> { "https://helseid-sts.nhn.no", "https://helseid-sts.test.nhn.no", "https://helseid-sts.utvikling.nhn.no"};
         private const double DefaultExpiryInHours = 10;

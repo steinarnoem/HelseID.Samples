@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HelseID.Test.WPF.WebBrowser.Model
+﻿namespace HelseID.Test.WPF.WebBrowser.Model
 {
     internal class AuthInfo
     {

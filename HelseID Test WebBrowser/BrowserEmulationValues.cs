@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HelseID.Test.WPF.WebBrowser
+﻿namespace HelseID.Test.WPF.WebBrowser
 {
-    static class BrowserEmulationValues
+    internal static class BrowserEmulationValues
     {
         public static uint Edge = 0x2AF9;
         public static uint Ie11 = 0x2AF8;

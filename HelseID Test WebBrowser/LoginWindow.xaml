@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HelseID.Test.WPF.WebBrowser"
         mc:Ignorable="d"
-        Title="Logg inn" Height="717.72" Width="845.158" Loaded="Window_Loaded">
+        Title="Login" Height="717.72" Width="845.158" Loaded="Window_Loaded">
     <Grid>
         <WebBrowser x:Name="webBrowser" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigating="WebBrowser_Navigating"/>
     </Grid>

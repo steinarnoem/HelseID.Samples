@@ -28,7 +28,7 @@ namespace HelseID.Test.WPF.WebBrowser
             catch (Exception e)
             {
                 MessageBox.Show(
-                    @"Applikasjonen har ikke tilstrekkelige rettigheter til å skrive til registeret. Start på nytt i administratormodus dersom du vil at applikasjonen skal gjøre nødvendige innstillinger");
+                    @"The application does not have sufficient priveleges to write to the registry. Try starting again in administrator modus if you would like the applicastion to do the neccessary configurations.");
             }
         }
 
@@ -47,6 +47,7 @@ namespace HelseID.Test.WPF.WebBrowser
             var clientId = ClientIdTextBox.Text;
             var scope = ScopeTextBox.Text.Replace(Environment.NewLine, " ");
             var secret = SecretTextBox.Text;
+
             var options = new OidcClientOptions()
             {
                 Authority = string.IsNullOrEmpty(authority) ? DefaultClientConfigurationValues.DefaultAuthority : authority,
@@ -75,7 +76,7 @@ namespace HelseID.Test.WPF.WebBrowser
 
             if (!NetworkHelper.StsIsAvailable(clientConfig.Authority))
             {
-                MessageBox.Show("Kunne ikke nå adressen:" + clientConfig.Authority);
+                MessageBox.Show("Could not reach the address:" + clientConfig.Authority);
             }
 
             _login = new LoginWindow(clientConfig);
@@ -138,7 +139,7 @@ namespace HelseID.Test.WPF.WebBrowser
             if (_result != null && _result.IdentityToken.IsNotNullOrEmpty())
                 ShowTokenViewer(_result.IdentityToken);
             else
-                MessageBox.Show("Id Token er ikke tilgjengelig - prøv å logg inn på nytt");
+                MessageBox.Show("The Id Token is not available - please authenticate again");
         }
 
         private void ShowAccessTokenRawButton_Click(object sender, RoutedEventArgs e)
@@ -146,7 +147,7 @@ namespace HelseID.Test.WPF.WebBrowser
             if (_result != null && _result.AccessToken.IsNotNullOrEmpty())
                 ShowTokenViewer(_result.AccessToken);
             else
-                MessageBox.Show("Access Token er ikke tilgjengelig - prøv å logg inn på nytt");
+                MessageBox.Show("The Id Token is not available - please authenticate again");
         }
 
         private static void ShowTokenViewer(string content)

@@ -137,9 +137,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ApiWindow.xaml.cs">
-      <DependentUpon>ApiWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="BrowserEmulationValues.cs" />
     <Compile Include="EventArgs\LoginEventArgs.cs" />
     <Compile Include="LoginWindow.xaml.cs">
@@ -147,14 +144,7 @@
     </Compile>
     <Compile Include="Model\AuthInfo.cs" />
     <Compile Include="RegistryHelper.cs" />
-    <Compile Include="TextViewer.xaml.cs">
-      <DependentUpon>TextViewer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Model\WebBrowserDocument.cs" />
-    <Page Include="ApiWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -172,10 +162,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="TextViewer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

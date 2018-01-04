@@ -54,7 +54,7 @@ namespace HelseID.Test.WPF.WebBrowser
 
                 if (key == null)
                 {
-                    throw new Exception("Fant ikke innstillinger for systemnettleser : nøkkel i regedit FEATURE_BROWSER_EMULATION");
+                    throw new Exception("Could not find settings for the system browser (registry key: FEATURE_BROWSER_EMULATION)");
                 }
 
                 return key;

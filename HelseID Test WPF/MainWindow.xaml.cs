@@ -155,6 +155,7 @@ namespace HelseID.Test.WPF
             _configuredScopes.Add(DefaultClientConfigurationValues.DefaultScope);
             SecretTextBox.Text = DefaultClientConfigurationValues.DefaultSecret;
             RedirectUrlTextBox.Text = RequestHandler.DefaultUri;
+            AuthoritiesComboBox.SelectedItem = DefaultClientConfigurationValues.DefaultAuthority;
 
             UpdateScopesTextBox();
         }

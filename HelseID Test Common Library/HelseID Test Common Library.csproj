@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorities.cs" />
-    <Compile Include="CryptoHelper.cs" />
+    <Compile Include="RsaCryptoServiceHelper.cs" />
     <Compile Include="JwtGenerator.cs" />
     <Compile Include="RSAKeyGenerator.cs" />
     <Compile Include="DefaultClientConfigurationValues.cs" />

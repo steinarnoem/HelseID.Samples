@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HelseID.Test.WPF.WebBrowser"
         mc:Ignorable="d"
-        Title="HelseID Test - Konfigurasjon av tykk klient med Embedded WebBrowser" 
+        Title="HelseID Test - Configuration of WPF client using embedded WebBrowser control" 
         Height="783.758" 
         Width="1197.989" 
         ResizeMode="NoResize">
@@ -44,7 +44,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="0,0,8,0" Grid.Column="2">
                 <Button x:Name="LoginButton" Content="Log in" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="LoginButton_Click"/>
                 <Button x:Name="LogOutButton" Content="Log out" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" Click="LogOutButton_Click"/>
-                <Button x:Name="CallApiButton" Content="Kall API" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" IsEnabled="False"/>
+                <Button x:Name="CallApiButton" Content="Call API" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" IsEnabled="False"/>
             </StackPanel>
             <Label Content="RedirectUrl:" HorizontalAlignment="Left" Margin="7,6,0,0" VerticalAlignment="Top" Width="78" Grid.Row="3" Height="26" Grid.Column="1" Grid.ColumnSpan="2"/>
             <TextBox x:Name="RedirectUrlTextBox" Margin="10,9,12,11" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="3"/>
@@ -91,8 +91,8 @@
             <TextBox Grid.Row="1" Grid.Column="1" x:Name="AccessTokenClaimsTextBox" TextWrapping="Wrap" Margin="23,10,6,10" VerticalContentAlignment="Center" />
             <Label Content="Access Token" Grid.Column="1" Margin="23,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Width="102" Height="29"/>
             <Label Content="Id Token" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Width="76" Height="29"/>
-            <Button x:Name="ShowIdTokenRawButton" Content="Vis token" HorizontalAlignment="Left" Margin="91,15,0,0" VerticalAlignment="Top" Width="75" Click="ShowIdTokenRawButton_Click" Height="20"/>
-            <Button x:Name="ShowAccessTokenRawButton" Content="Vis token" HorizontalAlignment="Left" Margin="130,15,0,0" VerticalAlignment="Top" Width="86" Grid.Column="1" Click="ShowAccessTokenRawButton_Click" Height="20"/>
+            <Button x:Name="ShowIdTokenRawButton" Content="Show token" HorizontalAlignment="Left" Margin="91,15,0,0" VerticalAlignment="Top" Width="75" Click="ShowIdTokenRawButton_Click" Height="20"/>
+            <Button x:Name="ShowAccessTokenRawButton" Content="Show token" HorizontalAlignment="Left" Margin="130,15,0,0" VerticalAlignment="Top" Width="86" Grid.Column="1" Click="ShowAccessTokenRawButton_Click" Height="20"/>
             
         </Grid>
         

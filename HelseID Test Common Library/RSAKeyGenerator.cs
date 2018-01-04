@@ -7,7 +7,7 @@ namespace HelseID.Test.WPF.Common
 {
     /// <summary>
     /// 
-    /// For identifikatorer for å angi JWS algoritme se: http://self-issued.info/docs/draft-ietf-jose-json-web-algorithms.html#rfc.appendix.A.1
+    /// For identificators used to set JWS algorithm see: http://self-issued.info/docs/draft-ietf-jose-json-web-algorithms.html#rfc.appendix.A.1
     /// </summary>
     public class RSAKeyGenerator
     {
@@ -27,11 +27,8 @@ namespace HelseID.Test.WPF.Common
 
             try
             {
-                Debug.WriteLine("Trying to open existing CngKey");
                 cngKey = CngKey.Open(KeyName);
-                Debug.WriteLine("Found existing CngKey");
                 cngKey.Dispose();
-                Debug.WriteLine("Deleting existing CngKey");
                 DeleteKey();
             }
             catch (CryptographicException e)

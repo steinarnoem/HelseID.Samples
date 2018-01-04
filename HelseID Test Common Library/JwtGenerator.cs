@@ -18,9 +18,9 @@ namespace HelseID.Test.WPF.Common
         /// <param name="clientId">The OAuth/OIDC client ID</param>
         /// <param name="audience">The Authorization Server (STS)</param>
         /// <param name="expiryDate">If value is null, the default expiry date is used (10 hrs)</param>
-        /// <param name="signingCredentials">SigningCredentials for JWS, if null we get for existing CngKey or create a new PK pair.</param>
+        /// <param name="signingCredentials">SigningCredentials for JWS, if this is null we get the credentials for existing CngKey or create a new PK pair.</param>
         /// <returns></returns>
-        public static string GenerateJwt(string clientId, string audience, DateTime? expiryDate, SigningCredentials signingCredentials = null)
+        public static string Generate(string clientId, string audience, DateTime? expiryDate, SigningCredentials signingCredentials = null)
         {
             if (signingCredentials == null)
                 signingCredentials = GetSigningCredentials();
@@ -33,8 +33,6 @@ namespace HelseID.Test.WPF.Common
 
         private static JwtSecurityToken CreateJwt(string clientId, string audience, DateTime? expiryDate, SigningCredentials signingCredentials)
         {
-            //var signingCredentials = GetSigningCredentials();
-
             var exp = new DateTimeOffset(expiryDate ?? DateTime.Now.AddHours(DefaultExpiryInHours));
 
             var claims = new List<Claim>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HelseID.Test.WPF.Common
+﻿namespace HelseID.Test.WPF.Common
 {
     public class DefaultClientConfigurationValues
     {

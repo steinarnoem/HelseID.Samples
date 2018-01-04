@@ -3,13 +3,13 @@ using System.Security.Cryptography;
 
 namespace HelseID.Test.WPF.Common
 {
-    public class CryptoHelper
+    public class RsaCryptoServiceHelper
     {
         private const string KeyContainerName = "HelseID_DRC_Client";
 
         /// <summary>
-        /// Genererer et nøkkelpar, og returnerer en XML formattert public key.
-        /// Hvis det finnes et nøkkelpar fra før blir denne slettet
+        /// Genererates a new PK pair, and returns an XML formatted public key.
+        /// If a keypair already exists it will be deleted
         /// </summary>
         /// <returns>XML formattert public key</returns>
         public string GenerateNewKeyPair()
@@ -80,9 +80,7 @@ namespace HelseID.Test.WPF.Common
             }
 
             return true;
-        }
-
-     
+        }     
 
         private RSACryptoServiceProvider GetKeyFromContainer()
         {

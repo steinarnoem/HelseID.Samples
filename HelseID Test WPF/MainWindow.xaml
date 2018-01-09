@@ -3,6 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"        
         xmlns:local="clr-namespace:HelseID.Test.WPF"
         mc:Ignorable="d"
         Title="HelseID Test - Configuration of client using default browser" 
@@ -42,9 +50,10 @@
             <TextBox IsReadOnly="True" Grid.Row="4" Grid.Column="2" x:Name="ScopeTextBox" Height="84" Margin="10,10,12,10" TextWrapping="Wrap" AcceptsReturn="True" VerticalAlignment="Center" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" VerticalScrollBarVisibility="Visible" />
             <Label Grid.Row="4" Grid.Column="1" Content="Scope:" HorizontalAlignment="Left" Margin="7,10,0,68" VerticalAlignment="Center" Width="78" Height="26" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
             <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="0,0,8,0" Grid.Column="2">
-                <Button x:Name="LoginButton" Content="Log in" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="Button_Click"/>
-                <Button x:Name="LogOutButton" Content="Log out" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" Click="LogOutButton_Click"/>
-                <Button x:Name="CallApiButton" Content="Call API" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" Click="CallApiButton_Click"/>
+                <Button x:Name="LoginButton" Content="Log in" HorizontalAlignment="Center" VerticalAlignment="Center" Width="89" Click="Button_Click" Margin="0,10,0,9"/>
+                <Button x:Name="LogOutButton" Content="Log out" HorizontalAlignment="Left" VerticalAlignment="Center" Width="102" Margin="10,10,0,9" Click="LogOutButton_Click"/>
+                <Button x:Name="CallApiButton" Content="Call API" HorizontalAlignment="Center" VerticalAlignment="Center" Width="89" Margin="10,10,0,9" Click="CallApiButton_Click"/>
+                <Button x:Name="ConfigSettings" Content="Settings" HorizontalAlignment="Center" VerticalAlignment="Center" Width="89" Margin="10,10,0,9" Click="ConfigSettings_Click"/>
             </StackPanel>
             <Label Content="RedirectUrl:" HorizontalAlignment="Left" Margin="7,6,0,0" VerticalAlignment="Top" Width="78" Grid.Row="3" Height="26" Grid.Column="1" Grid.ColumnSpan="2"/>
             <TextBox x:Name="RedirectUrlTextBox" Margin="10,9,12,11" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="3"/>
@@ -74,7 +83,7 @@
             <Label Grid.Row="0" Grid.Column="0" Content="Scopes" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="253" Height="34" FontWeight="Bold" FontSize="14" Grid.RowSpan="2"/>
             <StackPanel Grid.Row="1" Grid.Column="0" x:Name="ScopesList" Orientation="Vertical">
             </StackPanel>
-            
+
             <!--<TextBox Grid.Row="1" Grid.Column="0"  Margin="10" TextWrapping="Wrap" Text="openid&#xA;profile&#xA;helseid://scopes/hpr&#xA;helseid://scopes/identity/pid&#xA;helseid://scopes/hpr/hpr_number&#xA;helseid://scopes/identity/assurance_level&#xA;helseid://scopes/identity/pid_pseudonym&#xA;helseid://scopes/identity/security_level"/>-->
 
             <Label Grid.Row="0" Grid.Column="1"  Content="Configuration and info" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="253" Height="34" FontWeight="Bold" FontSize="14" Grid.RowSpan="2"/>
@@ -94,8 +103,8 @@
             <TextBox Grid.Row="1" Grid.Column="1" x:Name="AccessTokenClaimsTextBox" TextWrapping="Wrap" Margin="23,10,6,10" VerticalContentAlignment="Center" />
             <Label Content="Access Token" Grid.Column="1" Margin="23,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Width="102" Height="29"/>
             <Label Content="Id Token" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Width="76" Height="29"/>
-            <Button x:Name="ShowIdTokenRawButton" Content="Show token" HorizontalAlignment="Left" Margin="91,15,0,0" VerticalAlignment="Top" Width="75" Click="ShowIdTokenRawButton_Click" Height="20"/>
-            <Button x:Name="ShowAccessTokenRawButton" Content="Show token" HorizontalAlignment="Left" Margin="130,15,0,0" VerticalAlignment="Top" Width="86" Grid.Column="1" Click="ShowAccessTokenRawButton_Click" Height="20"/>
+            <Button x:Name="ShowIdTokenRawButton" Content="Show token" HorizontalAlignment="Left" Margin="91,15,0,0" VerticalAlignment="Top" Width="121" Click="ShowIdTokenRawButton_Click" Height="24"/>
+            <Button x:Name="ShowAccessTokenRawButton" Content="Show token" HorizontalAlignment="Left" Margin="130,15,0,0" VerticalAlignment="Top" Width="115" Grid.Column="1" Click="ShowAccessTokenRawButton_Click" Height="26"/>
         </Grid>
 
     </Grid>

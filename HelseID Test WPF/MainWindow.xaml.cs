@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using HelseID.Test.WPF.Common.Controls;
 using HelseID.Test.WPF.Common;
 using IdentityModel.OidcClient;
+using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -334,6 +335,12 @@ namespace HelseID.Test.WPF
             {
                 client.Dispose();
             }
+        }
+
+        private void ConfigSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new OidcClientSettingsWindow();
+            var result = settingsWindow.ShowDialog();
         }
     }
 }

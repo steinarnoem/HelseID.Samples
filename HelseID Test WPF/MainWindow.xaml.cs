@@ -60,9 +60,7 @@ namespace HelseID.Test.WPF
             var client = new OidcClient(options);            
 
             try
-            {                
-                
-                
+            {                                
                 var state = await client.PrepareLoginAsync(GetExtraParameters());
                 _browserManager.Start(state.StartUrl);
 
@@ -90,20 +88,17 @@ namespace HelseID.Test.WPF
             return new { acr_values = preselectIdp, prompt = "Login" };
         }
 
-        public object GetClientAssertionParameters()
+        public object GetClientAssertionParameters(OidcClientOptions clientOptions)
         {
-            var clientAssertionTypeParamName = "client_assertion_type";
-            var clientAssertionParamName = "client_assertion";
+            var assertion = JwtGenerator.Generate(clientOptions);
 
-            var assertion_type = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"; //client_assertion_type
-            var assertion = "myassertion"; //client_assertion
-
-            return new { client_assertion = assertion, client_assertion_type = assertion_type };
+            return new { client_assertion = assertion, client_assertion_type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer };
         }
 
         private async void OnLoginSuccess(string formData, OidcClient client, AuthorizeState state)
         {
-            var result = await client.ProcessResponseAsync(formData, state, GetClientAssertionParameters());
+            var extraParams = GetClientAssertionParameters(client.Options);
+            var result = await client.ProcessResponseAsync(formData, state, extraParams);
 
             HandleLoginResult(result);
 
@@ -120,7 +115,9 @@ namespace HelseID.Test.WPF
         {
             if ((result == null) || (result.IsError))
             {
-                MessageBox.Show(result.Error);
+                if (result != null)
+                    MessageBox.Show(result.Error);
+
                 _loginResult = null;
                 AccessTokenClaimsTextBox.Dispatcher.Invoke(() => { AccessTokenClaimsTextBox.Text = string.Empty; });
                 IdentityTokenClaimsTextBox.Dispatcher.Invoke(() => { IdentityTokenClaimsTextBox.Text = string.Empty; });
@@ -167,7 +164,7 @@ namespace HelseID.Test.WPF
         {
             ClientIdTextBox.Text = DefaultClientConfigurationValues.DefaultClientId;
             _configuredScopes.Add(DefaultClientConfigurationValues.DefaultScope);
-            SecretTextBox.Text = DefaultClientConfigurationValues.DefaultSecret;
+            SecretTextBox.Text = "";//DefaultClientConfigurationValues.DefaultSecret;
             RedirectUrlTextBox.Text = RequestHandler.DefaultUri;
             AuthoritiesComboBox.SelectedItem = DefaultClientConfigurationValues.DefaultAuthority;
 
@@ -179,18 +176,14 @@ namespace HelseID.Test.WPF
             var authority = AuthoritiesComboBox.SelectedValue as string;
             var clientId = ClientIdTextBox.Text.Trim();
             var scope = ScopeTextBox.Text.Replace(Environment.NewLine, " ");
-            var secret = SecretTextBox.Text;
+            var secret = "";//SecretTextBox.Text;
             var options = new OidcClientOptions()
             {
                 Authority = string.IsNullOrEmpty(authority) ? DefaultClientConfigurationValues.DefaultAuthority : authority,
                 ClientId = string.IsNullOrEmpty(clientId) ? DefaultClientConfigurationValues.DefaultClientId : clientId,
                 RedirectUri = RequestHandler.DefaultUri,
                 Scope = string.IsNullOrEmpty(scope) ? DefaultClientConfigurationValues.DefaultScope : scope,
-                ClientSecret = string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,
-                ProviderInformation = new ProviderInformation()
-                {
-
-                }
+                ClientSecret = secret //string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,
             };
 
             //JsonWebKeySet keyset = new JsonWebKeySet();

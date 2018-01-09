@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using IdentityModel.OidcClient;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HelseID.Test.WPF.Common
@@ -29,6 +30,15 @@ namespace HelseID.Test.WPF.Common
             var handler = new JwtSecurityTokenHandler();
             var token = handler.WriteToken(jwt);
             return token;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientOptions"></param>
+        public static string Generate(OidcClientOptions clientOptions)
+        {
+            return Generate(clientOptions.ClientId, clientOptions.Authority, null);
         }
 
         private static JwtSecurityToken CreateJwt(string clientId, string audience, DateTime? expiryDate, SigningCredentials signingCredentials)
@@ -79,6 +89,7 @@ namespace HelseID.Test.WPF.Common
             return validatedToken;
 
         }
+
 
     }
 }

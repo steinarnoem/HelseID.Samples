@@ -55,12 +55,13 @@ namespace HelseID.Test.WPF
             //if (!NetworkHelper.StsIsAvailable(options.Authority))
             //{
             //    MessageBox.Show("Kunne ikke nå adressen:" + options.Authority);
-            //}
+            //}               
 
             var client = new OidcClient(options);            
 
             try
             {                
+                
                 
                 var state = await client.PrepareLoginAsync(GetExtraParameters());
                 _browserManager.Start(state.StartUrl);
@@ -85,12 +86,24 @@ namespace HelseID.Test.WPF
             if (string.IsNullOrEmpty(preselectIdp))
                 return null;
 
+
             return new { acr_values = preselectIdp, prompt = "Login" };
+        }
+
+        public object GetClientAssertionParameters()
+        {
+            var clientAssertionTypeParamName = "client_assertion_type";
+            var clientAssertionParamName = "client_assertion";
+
+            var assertion_type = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"; //client_assertion_type
+            var assertion = "myassertion"; //client_assertion
+
+            return new { client_assertion = assertion, client_assertion_type = assertion_type };
         }
 
         private async void OnLoginSuccess(string formData, OidcClient client, AuthorizeState state)
         {
-            var result = await client.ProcessResponseAsync(formData, state);
+            var result = await client.ProcessResponseAsync(formData, state, GetClientAssertionParameters());
 
             HandleLoginResult(result);
 
@@ -107,6 +120,7 @@ namespace HelseID.Test.WPF
         {
             if ((result == null) || (result.IsError))
             {
+                MessageBox.Show(result.Error);
                 _loginResult = null;
                 AccessTokenClaimsTextBox.Dispatcher.Invoke(() => { AccessTokenClaimsTextBox.Text = string.Empty; });
                 IdentityTokenClaimsTextBox.Dispatcher.Invoke(() => { IdentityTokenClaimsTextBox.Text = string.Empty; });
@@ -172,15 +186,21 @@ namespace HelseID.Test.WPF
                 ClientId = string.IsNullOrEmpty(clientId) ? DefaultClientConfigurationValues.DefaultClientId : clientId,
                 RedirectUri = RequestHandler.DefaultUri,
                 Scope = string.IsNullOrEmpty(scope) ? DefaultClientConfigurationValues.DefaultScope : scope,
-                ClientSecret = string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,                
+                ClientSecret = string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,
+                ProviderInformation = new ProviderInformation()
+                {
+
+                }
             };
+
+            //JsonWebKeySet keyset = new JsonWebKeySet();
 
             if (UseADFSCheckBox.IsChecked.HasValue && UseADFSCheckBox.IsChecked.Value)
             {
                 options.Policy =
                     new Policy()
                     {
-                        RequireAccessTokenHash = false //ADFS 2016 spesific code - don't require hash for access_token
+                        RequireAccessTokenHash = false, //ADFS 2016 spesific code - don't require hash for access_token                        
                     };
             }
 

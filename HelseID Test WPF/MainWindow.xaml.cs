@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using HelseID.Test.WPF.Common.Controls;
 using HelseID.Test.WPF.Common;
 using IdentityModel.OidcClient;
-using MaterialDesignThemes.Wpf;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace HelseID.Test.WPF
@@ -22,7 +19,8 @@ namespace HelseID.Test.WPF
         private readonly SystemBrowserManager _browserManager;
         private readonly RequestHandler _requestHandler;
         private LoginResult _loginResult;
-        private readonly List<string> _configuredScopes = new List<string>();
+        private OidcClientOptions _options;
+        private List<string> _configuredScopes = new List<string>();
 
         public MainWindow()
         {
@@ -30,7 +28,7 @@ namespace HelseID.Test.WPF
 
             _browserManager = new SystemBrowserManager();
 
-            SetDefaultClientConfiguration();
+            //SetDefaultClientConfiguration();
 
             _requestHandler = new RequestHandler();            
         }
@@ -51,14 +49,14 @@ namespace HelseID.Test.WPF
 
         private async Task Login()
         {
-            var options = GetClientConfiguration();
+            //var options = GetClientConfiguration();
 
             //if (!NetworkHelper.StsIsAvailable(options.Authority))
             //{
             //    MessageBox.Show("Kunne ikke nå adressen:" + options.Authority);
             //}               
 
-            var client = new OidcClient(options);            
+            var client = new OidcClient(_options);
 
             try
             {                                
@@ -75,12 +73,11 @@ namespace HelseID.Test.WPF
                 MessageBox.Show(e.Message, e.StackTrace);
                 throw;
             }
-
         }
 
         public object GetExtraParameters()
         {            
-            var preselectIdp = PreselectIdpTextBox.Text;
+            var preselectIdp = (string) PreselectIdpLabel.Content;
 
             if (string.IsNullOrEmpty(preselectIdp))
                 return null;
@@ -144,7 +141,7 @@ namespace HelseID.Test.WPF
             if (_loginResult != null && _loginResult.IdentityToken.IsNotNullOrEmpty())
                 ShowTokenViewer(_loginResult.IdentityToken);
             else
-                MessageBox.Show("Id Token er ikke tilgjengelig - prøv å logg inn på nytt");
+                MessageBox.Show("There is no Id Token available - try to log in");
         }
 
         private void ShowAccessTokenRawButton_Click(object sender, RoutedEventArgs e)
@@ -152,7 +149,7 @@ namespace HelseID.Test.WPF
             if (_loginResult != null && _loginResult.AccessToken.IsNotNullOrEmpty())
                 ShowTokenViewer(_loginResult.AccessToken);
             else
-                MessageBox.Show("Access Token er ikke tilgjengelig - prøv å logg inn på nytt");
+                MessageBox.Show("There is no Access Token available - try to log in");
         }
 
         private static void ShowTokenViewer(string content)
@@ -161,49 +158,13 @@ namespace HelseID.Test.WPF
             view.ShowDialog();
         }
 
-        private void SetDefaultClientConfiguration()
+        private void UpdateConfigurationView()
         {
-            ClientIdTextBox.Text = DefaultClientConfigurationValues.DefaultClientId;
-            _configuredScopes.Add(DefaultClientConfigurationValues.DefaultScope);
-            SecretTextBox.Text = "";//DefaultClientConfigurationValues.DefaultSecret;
-            RedirectUrlTextBox.Text = RequestHandler.DefaultUri;
-            AuthoritiesComboBox.SelectedItem = DefaultClientConfigurationValues.DefaultAuthority;
-
-            UpdateScopesTextBox();
-        }
-
-        public OidcClientOptions GetClientConfiguration()
-        {
-            var authority = AuthoritiesComboBox.SelectedValue as string;
-            var clientId = ClientIdTextBox.Text.Trim();
-            var scope = ScopeTextBox.Text.Replace(Environment.NewLine, " ");
-            var secret = "";//SecretTextBox.Text;
-            var options = new OidcClientOptions()
-            {
-                Authority = string.IsNullOrEmpty(authority) ? DefaultClientConfigurationValues.DefaultAuthority : authority,
-                ClientId = string.IsNullOrEmpty(clientId) ? DefaultClientConfigurationValues.DefaultClientId : clientId,
-                RedirectUri = RequestHandler.DefaultUri,
-                Scope = string.IsNullOrEmpty(scope) ? DefaultClientConfigurationValues.DefaultScope : scope,
-                ClientSecret = secret //string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,
-            };
-
-            //JsonWebKeySet keyset = new JsonWebKeySet();
-
-            if (UseADFSCheckBox.IsChecked.HasValue && UseADFSCheckBox.IsChecked.Value)
-            {
-                options.Policy =
-                    new Policy()
-                    {
-                        RequireAccessTokenHash = false, //ADFS 2016 spesific code - don't require hash for access_token                        
-                    };
-            }
-
-            options.BrowserTimeout = TimeSpan.FromSeconds(5);
-
-            options.Flow = OidcClientOptions.AuthenticationFlow.Hybrid;
-
-            return options;
-        }
+            ClientIdLabel.Content = _options.ClientId;
+            SecretLabel.Content = _options.ClientSecret;
+            RedirectUrlLabel.Content = _options.RedirectUri;
+            AuthoritiesLabel.Content = _options.Authority;
+        }        
 
         private void LogOutButton_Click(object sender, RoutedEventArgs e)
         {            
@@ -212,18 +173,19 @@ namespace HelseID.Test.WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            AuthoritiesComboBox.ItemsSource = Authorities.HelseIdAuthorities;
-
-            SetDefaultScopes();
-
+            UpdateScopesList();
         }
-        private void SetDefaultScopes()
+
+        private void UpdateScopesList()
         {
+            ScopesList.Children.Clear();
             foreach (var scope in Scopes.DefaultScopes)
             {
                 var scopeCheckBox = new CheckBox()
                 {
-                    Content = scope
+                    Content = scope,
+                    IsManipulationEnabled = false
+                    //IsEnabled = false
                 };
 
                 if (_configuredScopes.Contains(scope))
@@ -231,39 +193,21 @@ namespace HelseID.Test.WPF
 
                 scopeCheckBox.Unchecked += (checkbox, args) =>
                 {
-                    var box = checkbox as CheckBox;
-                    if (box == null) return;
-
-                    var s = box.Content as string;
-
-                    if (!_configuredScopes.Contains(s)) return;
-
-                    _configuredScopes.Remove(s);
-                    UpdateScopesTextBox();
+                    //Hack for å unngå at brukeren velger noe her
+                    args.Handled = true;
+                    UpdateScopesList();
                 };
 
                 scopeCheckBox.Checked += (checkbox, args) =>
                 {
-
-                    var box = checkbox as CheckBox;
-                    if (box == null) return;
-
-                    var s = box.Content as string;
-
-                    if (_configuredScopes.Contains(s)) return;
-
-                    _configuredScopes.Add(s);
-                    UpdateScopesTextBox();
+                    //Hack for å unngå at brukeren velger noe her
+                    args.Handled = true;
+                    UpdateScopesList();
                 };
 
                 ScopesList.Children.Add(scopeCheckBox);
             }
 
-        }
-        private void UpdateScopesTextBox()
-        {
-            ScopeTextBox.Text = string.Join(Environment.NewLine, _configuredScopes);
-            ScopeTextBox.Text = string.Join(Environment.NewLine, _configuredScopes);
         }
 
         private void CallApiButton_Click(object sender, RoutedEventArgs e)
@@ -339,7 +283,15 @@ namespace HelseID.Test.WPF
 
         private void ConfigSettings_Click(object sender, RoutedEventArgs e)
         {
-            var settingsWindow = new OidcClientSettingsWindow();
+            var settingsWindow = new OidcClientSettingsWindow(_configuredScopes, _options);
+            settingsWindow.OptionsChanged += (s, updatedOptions) =>
+            {
+                _options = updatedOptions.Options;
+                _configuredScopes = updatedOptions.Scopes;
+
+                UpdateConfigurationView();
+                UpdateScopesList();
+            };
             var result = settingsWindow.ShowDialog();
         }
     }

@@ -6,48 +6,95 @@ using IdentityModel.OidcClient;
 
 namespace HelseID.Test.WPF.Common.Controls
 {
+
+    public class OidcOptionsChangedEventArgs : EventArgs
+    {
+        public OidcClientOptions Options { get; set; }
+        public List<string> Scopes { get; set; }
+
+        public OidcOptionsChangedEventArgs(OidcClientOptions options, List<string> configuredScopes)
+        {
+            Options = options;
+            Scopes = configuredScopes;
+        }
+    }
+
     /// <summary>
     /// Interaction logic for OidcClientSettingsWindow.xaml
     /// </summary>
     public partial class OidcClientSettingsWindow : Window
-    {
-        private readonly List<string> _configuredScopes = new List<string>();
+    {        
+        public event EventHandler<OidcOptionsChangedEventArgs> OptionsChanged;
+
+        private List<string> ConfiguredScopes { get; set; }
         private OidcClientOptions _options;
 
         public OidcClientSettingsWindow()
         {
             InitializeComponent();
+
+            ConfiguredScopes = new List<string>();
+
+            SetDefaultClientConfiguration();
+            CreateScopesCheckboxes();
         }
 
-        public OidcClientSettingsWindow(List<string> scopes)
+        public OidcClientSettingsWindow(IReadOnlyCollection<string> scopes)
         {
             InitializeComponent();
-            _configuredScopes = scopes;
+            ConfiguredScopes = scopes != null ? new List<string>(scopes) : new List<string>();
+
+            SetDefaultClientConfiguration();
+            CreateScopesCheckboxes();
         }
 
         public OidcClientSettingsWindow(List<string> scopes, OidcClientOptions options)
         {
             InitializeComponent();
-            _configuredScopes = scopes;
-            _options = options;
+
+            ConfiguredScopes = scopes != null ? new List<string>(scopes) : new List<string>();
+
+            if (options != null)
+            {
+                _options = options;
+                UpdateClientSettingControls();
+            }
+            else
+            {
+                SetDefaultClientConfiguration();
+            }
+
+            CreateScopesCheckboxes();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            SetDefaultClientConfiguration();
-            SetDefaultScopes();
+        {            
+           
         }
 
         private void SetDefaultClientConfiguration()
         {
+            AuthoritiesComboBox.ItemsSource = Authorities.HelseIdAuthorities;
             ClientIdTextBox.Text = DefaultClientConfigurationValues.DefaultClientId;
-            _configuredScopes.Add(DefaultClientConfigurationValues.DefaultScope);
+            ConfiguredScopes.Add(DefaultClientConfigurationValues.DefaultScope);
             SecretTextBox.Text = DefaultClientConfigurationValues.DefaultSecret;
             RedirectUrlTextBox.Text = SystemBrowserRequestHandler.DefaultUri;
             AuthoritiesComboBox.SelectedItem = DefaultClientConfigurationValues.DefaultAuthority;
+            
         }
 
-        private void SetDefaultScopes()
+        private void UpdateClientSettingControls()
+        {
+            AuthoritiesComboBox.ItemsSource = Authorities.HelseIdAuthorities;
+            AuthoritiesComboBox.SelectedItem = _options.Authority;
+
+            ClientIdTextBox.Text = _options.ClientId;
+            
+            SecretTextBox.Text = _options.ClientSecret;
+            RedirectUrlTextBox.Text = _options.RedirectUri;
+        }
+
+        private void CreateScopesCheckboxes()
         {
             foreach (var scope in Scopes.DefaultScopes)
             {
@@ -56,7 +103,7 @@ namespace HelseID.Test.WPF.Common.Controls
                     Content = scope
                 };
 
-                if (_configuredScopes.Contains(scope))
+                if (ConfiguredScopes.Contains(scope))
                     scopeCheckBox.IsChecked = true;
 
                 scopeCheckBox.Unchecked += (checkbox, args) =>
@@ -66,10 +113,9 @@ namespace HelseID.Test.WPF.Common.Controls
 
                     var s = box.Content as string;
 
-                    if (!_configuredScopes.Contains(s)) return;
+                    if (!ConfiguredScopes.Contains(s)) return;
 
-                    _configuredScopes.Remove(s);
-                    //UpdateScopesTextBox();
+                    ConfiguredScopes.Remove(s);
                 };
 
                 scopeCheckBox.Checked += (checkbox, args) =>
@@ -80,10 +126,9 @@ namespace HelseID.Test.WPF.Common.Controls
 
                     var s = box.Content as string;
 
-                    if (_configuredScopes.Contains(s)) return;
+                    if (ConfiguredScopes.Contains(s)) return;
 
-                    _configuredScopes.Add(s);
-                    //UpdateScopesTextBox();
+                    ConfiguredScopes.Add(s);
                 };
 
                 ScopesList.Children.Add(scopeCheckBox);
@@ -95,14 +140,16 @@ namespace HelseID.Test.WPF.Common.Controls
         {
             var authority = AuthoritiesComboBox.SelectedValue as string;
             var clientId = ClientIdTextBox.Text.Trim();
-            var scope = string.Join(" ", _configuredScopes);
+            var scope = string.Join(" ", ConfiguredScopes);
             var secret = SecretTextBox.Text;
+            var redirectUrl = RedirectUrlTextBox.Text;
+
             var options = new OidcClientOptions()
             {
-                Authority = string.IsNullOrEmpty(authority) ? DefaultClientConfigurationValues.DefaultAuthority : authority,
-                ClientId = string.IsNullOrEmpty(clientId) ? DefaultClientConfigurationValues.DefaultClientId : clientId,
-                RedirectUri = SystemBrowserRequestHandler.DefaultUri,
-                Scope = string.IsNullOrEmpty(scope) ? DefaultClientConfigurationValues.DefaultScope : scope,
+                Authority = authority.IsNullOrEmpty() ? DefaultClientConfigurationValues.DefaultAuthority : authority,
+                ClientId = clientId.IsNullOrEmpty() ? DefaultClientConfigurationValues.DefaultClientId : clientId,
+                RedirectUri = redirectUrl.IsNullOrEmpty() ? SystemBrowserRequestHandler.DefaultUri : redirectUrl,
+                Scope = scope.IsNullOrEmpty() ? DefaultClientConfigurationValues.DefaultScope : scope,
                 ClientSecret = secret //string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,
             };
 
@@ -125,12 +172,17 @@ namespace HelseID.Test.WPF.Common.Controls
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
+            _options = GetClientConfiguration();
+            OptionsChanged?.Invoke(this, new OidcOptionsChangedEventArgs(_options, ConfiguredScopes));
+
             DialogResult = true;
+            Close();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+            Close();
         }
 
 

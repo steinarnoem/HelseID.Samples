@@ -26,5 +26,10 @@ namespace HelseID.Test.WPF.Common.Controls
             DialogResult = false;
             Close();
         }
+
+        private void ApiAddressTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+        }
     }
 }

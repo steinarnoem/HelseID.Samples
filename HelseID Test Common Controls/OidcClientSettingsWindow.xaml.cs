@@ -100,7 +100,7 @@ namespace HelseID.Test.WPF.Common.Controls
             {
                 var scopeCheckBox = new CheckBox()
                 {
-                    Content = scope
+                    Content = scope.Replace("_", "__")
                 };
 
                 if (ConfiguredScopes.Contains(scope))
@@ -109,26 +109,31 @@ namespace HelseID.Test.WPF.Common.Controls
                 scopeCheckBox.Unchecked += (checkbox, args) =>
                 {
                     var box = checkbox as CheckBox;
-                    if (box == null) return;
 
-                    var s = box.Content as string;
+                    var s = box?.Content as string;
 
-                    if (!ConfiguredScopes.Contains(s)) return;
+                    if (s == null) return;
 
-                    ConfiguredScopes.Remove(s);
+                    var sanitizedScope = s.Replace("__", "_");
+
+                    if (!ConfiguredScopes.Contains(sanitizedScope)) return;
+
+                    ConfiguredScopes.Remove(sanitizedScope);
                 };
 
                 scopeCheckBox.Checked += (checkbox, args) =>
                 {
-
                     var box = checkbox as CheckBox;
-                    if (box == null) return;
 
-                    var s = box.Content as string;
+                    var s = box?.Content as string;
 
-                    if (ConfiguredScopes.Contains(s)) return;
+                    if (s == null) return;
 
-                    ConfiguredScopes.Add(s);
+                    var sanitizedScope = s.Replace("__", "_");
+
+                    if (ConfiguredScopes.Contains(sanitizedScope)) return;
+
+                    ConfiguredScopes.Add(sanitizedScope);
                 };
 
                 ScopesList.Children.Add(scopeCheckBox);

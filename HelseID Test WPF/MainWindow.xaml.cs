@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using HelseID.Test.WPF.Common.Controls;
 using HelseID.Test.WPF.Common;
 using IdentityModel.OidcClient;
+using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json.Linq;
 
 namespace HelseID.Test.WPF
@@ -28,8 +29,6 @@ namespace HelseID.Test.WPF
 
             _browserManager = new SystemBrowserManager();
 
-            //SetDefaultClientConfiguration();
-
             _requestHandler = new RequestHandler();            
         }
 
@@ -44,7 +43,6 @@ namespace HelseID.Test.WPF
                 MessageBox.Show(ex.Message);
                 MessageBox.Show(ex.StackTrace);
             }
-            
         }
 
         private async Task Login()
@@ -55,6 +53,13 @@ namespace HelseID.Test.WPF
             //{
             //    MessageBox.Show("Kunne ikke nå adressen:" + options.Authority);
             //}               
+
+            if (_options == null)
+            {
+
+                MessageBox.Show("You must create a client configuration before logging in..", "Missing client configuration");
+                return;
+            }
 
             var client = new OidcClient(_options);
 
@@ -75,27 +80,21 @@ namespace HelseID.Test.WPF
             }
         }
 
-        public object GetExtraParameters()
-        {            
-            var preselectIdp = (string) PreselectIdpLabel.Content;
-
-            if (string.IsNullOrEmpty(preselectIdp))
-                return null;
-
-
-            return new { acr_values = preselectIdp, prompt = "Login" };
-        }
-
-        public object GetClientAssertionParameters(OidcClientOptions clientOptions)
+        public void DialogHostOpeningEventHandler(object sender, DialogOpenedEventArgs eventargs)
         {
-            var assertion = JwtGenerator.Generate(clientOptions);
-
-            return new { client_assertion = assertion, client_assertion_type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer };
+            //Nothing
         }
 
         private async void OnLoginSuccess(string formData, OidcClient client, AuthorizeState state)
         {
-            var extraParams = GetClientAssertionParameters(client.Options);
+            object extraParams = null;
+
+            Dispatcher.Invoke(() =>
+            {
+                if (UseJwtBearerClientAuthentication.IsChecked.HasValue && UseJwtBearerClientAuthentication.IsChecked.Value)
+                    extraParams = GetClientAssertionParameters(client.Options);
+            });
+            
             var result = await client.ProcessResponseAsync(formData, state, extraParams);
 
             HandleLoginResult(result);
@@ -126,6 +125,25 @@ namespace HelseID.Test.WPF
 
             ShowTokenContent(result.AccessToken, result.IdentityToken);            
         }
+
+        public object GetExtraParameters()
+        {
+            var preselectIdp = (string)PreselectIdpLabel.Content;
+
+            if (string.IsNullOrEmpty(preselectIdp))
+                return null;
+
+
+            return new { acr_values = preselectIdp, prompt = "Login" };
+        }
+
+        public object GetClientAssertionParameters(OidcClientOptions clientOptions)
+        {
+            var assertion = JwtGenerator.Generate(clientOptions);
+
+            return new { client_assertion = assertion, client_assertion_type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer };
+        }
+
 
         private void ShowTokenContent(string accessToken, string identityToken)
         {
@@ -292,7 +310,17 @@ namespace HelseID.Test.WPF
                 UpdateConfigurationView();
                 UpdateScopesList();
             };
-            var result = settingsWindow.ShowDialog();
+            var result = settingsWindow.ShowDialog();            
+        }
+
+        private void DialogHost_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+
+        }
+
+        private void DialogHost_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
+        {
+
         }
     }
 }

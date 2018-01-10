@@ -202,8 +202,6 @@ namespace HelseID.Test.WPF
                 var scopeCheckBox = new CheckBox()
                 {
                     Content = scope,
-                    IsManipulationEnabled = false
-                    //IsEnabled = false
                 };
 
                 if (_configuredScopes.Contains(scope))

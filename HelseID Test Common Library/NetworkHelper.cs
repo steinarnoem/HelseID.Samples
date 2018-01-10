@@ -24,12 +24,13 @@ namespace HelseID.Test.WPF.Common
                 {
                     if (response == null) return false;
 
-                    if (response.StatusCode == HttpStatusCode.OK)
-                        return true;
-                    if (response.StatusCode == HttpStatusCode.Redirect)
+                    switch (response.StatusCode)
                     {
-                        var uriString = response.Headers["Location"];
-                        return StsIsAvailable(uriString);
+                        case HttpStatusCode.OK:
+                            return true;
+                        case HttpStatusCode.Redirect:
+                            var uriString = response.Headers["Location"];
+                            return StsIsAvailable(uriString);
                     }
 
                     response.Close();

@@ -4,97 +4,116 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HelseID.Test.WPF.WebBrowser"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"        
         mc:Ignorable="d"
         Title="HelseID Test - Configuration of WPF client using embedded WebBrowser control" 
         Height="783.758" 
         Width="1197.989" 
         ResizeMode="NoResize">
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="104*"></RowDefinition>
-            <RowDefinition Height="7"></RowDefinition>
-            <RowDefinition Height="83*"></RowDefinition>
+            <RowDefinition Height="320*"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="250*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
+        <materialDesign:Card Grid.Row="0" Grid.Column="0" Height="370" Padding="32,5,32,32" Margin="16">
+            <StackPanel Orientation="Vertical">
+                <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20">Current client configuration</Label>
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="36"></RowDefinition>
+                        <RowDefinition Height="36"></RowDefinition>
+                        <RowDefinition Height="36"></RowDefinition>
+                        <RowDefinition Height="36"></RowDefinition>
+                        <RowDefinition Height="36"></RowDefinition>
+                        <RowDefinition Height="36"></RowDefinition>
+                        <RowDefinition Height="36"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
+                    <Label Grid.Row="0" Grid.Column="0" Content="Authority:" HorizontalAlignment="Left" Margin="0"  />
+                    <Label Grid.Row="0"  x:Name="AuthoritiesLabel" Margin="0"  Grid.Column="1" Content="Not Configured" />
 
-        <Grid Grid.Row="0" Grid.Column="0" Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="36*"></RowDefinition>
-                <RowDefinition Height="40*"></RowDefinition>
-                <RowDefinition Height="37*"></RowDefinition>
-                <RowDefinition Height="42*"></RowDefinition>
-                <RowDefinition Height="104*"></RowDefinition>
-                <RowDefinition Height="34*"></RowDefinition>
-                <RowDefinition Height="41*"></RowDefinition>
-                <RowDefinition Height="49*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.606"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+                    <Label Grid.Row="1" Grid.Column="0" Content="ClientId:" HorizontalAlignment="Left" Margin="0" />
+                    <Label Grid.Row="1" Grid.Column="1" x:Name="ClientIdLabel" Margin="0" Content="Not Configured" />
 
-            <TextBox Grid.Row="4" Grid.Column="2" x:Name="ScopeTextBox" Height="84" Margin="10,10,12,10" TextWrapping="Wrap" AcceptsReturn="True" VerticalAlignment="Center" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" />
-            <Label Grid.Row="4" Grid.Column="1" Content="Scope:" HorizontalAlignment="Left" Margin="7,10,0,68" VerticalAlignment="Center" Width="78" Height="26" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
-            <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="0,0,8,0" Grid.Column="2">
-                <Button x:Name="LoginButton" Content="Log in" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="LoginButton_Click"/>
-                <Button x:Name="LogOutButton" Content="Log out" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" Click="LogOutButton_Click"/>
-                <Button x:Name="CallApiButton" Content="Call API" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" IsEnabled="False"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="Secret:" HorizontalAlignment="Left" Margin="0"  />
+                    <Label Grid.Row="2" Grid.Column="1" x:Name="SecretLabel" Margin="0" Content="Not Configured" />
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="RedirectUrl:" HorizontalAlignment="Left" Margin="0"   />
+                    <Label Grid.Row="3" Grid.Column="1" x:Name="RedirectUrlLabel" Margin="0" Content="Not Configured" />
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="IdP:" HorizontalAlignment="Left" Margin="0" />
+                    <Label Grid.Row="4" Grid.Column="1"  x:Name="PreselectIdpLabel" Margin="0" Content="Not Configured" />
+
+                    <CheckBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="UseADFSCheckBox" Content="Use ADFS (Windows Server 2016)" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0"  />
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Button x:Name="ConfigSettings" Content="Settings" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Click="ConfigSettings_Click"/>
+                    </StackPanel>
+
+                </Grid>
             </StackPanel>
-            <Label Content="RedirectUrl:" HorizontalAlignment="Left" Margin="7,6,0,0" VerticalAlignment="Top" Width="78" Grid.Row="3" Height="26" Grid.Column="1" Grid.ColumnSpan="2"/>
-            <TextBox x:Name="RedirectUrlTextBox" Margin="10,9,12,11" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="3"/>
-            <Label Content="Secret:" HorizontalAlignment="Left" Margin="7,7,0,0" VerticalAlignment="Top" Grid.Row="2" Height="26" Width="78" Grid.Column="1" Grid.ColumnSpan="2"/>
-            <TextBox x:Name="SecretTextBox" Margin="10,8,12,0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="2" Height="22" VerticalAlignment="Top"/>
-            <Label Content="ClientId:" HorizontalAlignment="Left" Margin="7,2,0,0" Grid.Row="1" Width="63" Grid.Column="1" Height="27" VerticalAlignment="Top"/>
-            <TextBox x:Name="ClientIdTextBox" Margin="10,10,12,0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="1" Height="22" VerticalAlignment="Top"/>
-            <Label Content="Authority:" HorizontalAlignment="Left" Margin="7,4,0,6" Width="78" Grid.Column="1" Grid.ColumnSpan="2"/>
-            <TextBox x:Name="AuthorityTextBox" Height="22" Margin="10,8,12,6" TextWrapping="Wrap" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Column="2"/>
-            <CheckBox x:Name="UseADFSCheckBox" Content="Bruk OIDC i ADFS (Windows Server 2016)" HorizontalAlignment="Left" VerticalAlignment="Center" Height="12" Width="296" Grid.Column="2" Margin="10,15,0,14" Grid.Row="6" />
-            <Label Grid.Row="4" Grid.Column="1" Content="IdP:" HorizontalAlignment="Left" Margin="10,97,0,15" VerticalAlignment="Center" Width="48" Height="26" VerticalContentAlignment="Center" Grid.RowSpan="2"/>
-            <TextBox x:Name="PreselectIdpTextBox" Height="21" Margin="10,5,12,0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="5"/>
+        </materialDesign:Card>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <CheckBox x:Name="UseJwtBearerClientAuthentication" Margin="32,10,32,10" Content="Use Jwt bearer client authentication"></CheckBox>
+            <StackPanel Orientation="Horizontal" Margin="32,0,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="LoginButton" Content="Log in" HorizontalAlignment="Center" VerticalAlignment="Center"  Click="Button_Click" Margin="0"/>
+                    <Button x:Name="LogOutButton" Content="Log out" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,10,0" Click="LogOutButton_Click" />
+                    <Button x:Name="CallApiButton" Content="Call API" HorizontalAlignment="Center" VerticalAlignment="Center" Click="CallApiButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
 
 
-        </Grid>
+        <materialDesign:Card Grid.Row="0" Grid.Column="1" Height="370" Padding="32,5,32,32" Margin="16">
+            <StackPanel Orientation="Vertical">
+                <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20">Selected Scopes</Label>
+                <StackPanel x:Name="ScopesList" Orientation="Vertical">
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
 
+        <materialDesign:Card Grid.Row="0" Grid.Column="2" Height="370" Padding="32,5,32,32" Margin="16">
+            <StackPanel Orientation="Vertical">
+                <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20">Config Info</Label>
+                <TextBox Height="268" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Text="Fødselsnummer (BankId):&#xA;24019491117&#xA;24019491036&#xA;24019490919&#xA;&#xA;Credentials:&#xA;Engangskode: otp&#xA;Personlig passord: qwer1234&#xA;&#xA;To jump directly to ID-Porten:&#xA;idP:idporten-oidc&#xD;&#xA;&#xD;&#xA;ClientID HelseID Test:&#xD;&#xA;nhn.test.wpf.defaultbrowser&#xD;&#xA;&#xD;&#xA;Secret HelseID Test:&#xD;&#xA;nDq53nMQOeCnNdz21BlcweFVq7pNhiWfR0w3Yc2eS6lpn5Vy5z0Bvd5xm00fwJrp"/>
+            </StackPanel>
+        </materialDesign:Card>
 
-        <Grid Grid.Row="0" Grid.Column="1" Margin="0,0,0,38">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="33*"></RowDefinition>
-                <RowDefinition Height="370*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="Innlogging" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="253" Height="34" FontWeight="Bold" FontSize="14" Grid.RowSpan="2"/>
-            <TextBox Grid.Row="1" Grid.Column="0"  Margin="10" TextWrapping="Wrap" Text="openid&#xA;profile&#xA;helseid://scopes/hpr&#xA;helseid://scopes/identity/pid&#xA;helseid://scopes/hpr/hpr_number&#xA;helseid://scopes/identity/assurance_level&#xA;helseid://scopes/identity/pid_pseudonym&#xA;helseid://scopes/identity/security_level"/>
+        <materialDesign:Card Grid.Row="2" Grid.Column="0" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Vertical">
+                <Label Content="Id Token" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                <TextBox x:Name="IdentityTokenClaimsTextBox" Height="100" AcceptsReturn="True" TextWrapping="Wrap" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+                <Button x:Name="ShowIdTokenRawButton" Content="Show token" Margin="0,5,0,0" HorizontalAlignment="Center" Click="ShowIdTokenRawButton_Click" />                
+            </StackPanel>
+        </materialDesign:Card>
 
-            <Label Grid.Row="0" Grid.Column="1"  Content="Scopes" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="253" Height="34" FontWeight="Bold" FontSize="14" Grid.RowSpan="2"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Margin="10" TextWrapping="Wrap" Text="Fødselsnummer for test hos BankId:&#xD;&#xA;24019491117&#xD;&#xA;24019491036&#xD;&#xA;24019490919&#xD;&#xA;&#xD;&#xA;Innlogging:&#xD;&#xA;eingangskode: otp&#xD;&#xA;passord: qwer1234&#xD;&#xA;&#xD;&#xA;Direkte valg av ID-Porten:&#xD;&#xA;idp:idporten-oidc"/>
-        </Grid>
+        <materialDesign:Card Grid.Row="2" Grid.Column="1" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Vertical">
+                <Label Content="Access Token" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                <TextBox x:Name="AccessTokenClaimsTextBox" Height="100" TextWrapping="WrapWithOverflow" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+                <Button x:Name="ShowAccessTokenRawButton" Content="Show token" Margin="0,5,0,0" HorizontalAlignment="Center" Click="ShowAccessTokenRawButton_Click" />
+            </StackPanel>
+        </materialDesign:Card>
 
-        <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,20,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="41"></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <TextBox Grid.Row="1" Grid.Column="0" x:Name="IdentityTokenClaimsTextBox" AcceptsReturn="True" Margin="10,10,17,10" TextWrapping="Wrap" xml:space="preserve" VerticalContentAlignment="Center"/>
-            <TextBox Grid.Row="1" Grid.Column="1" x:Name="AccessTokenClaimsTextBox" TextWrapping="Wrap" Margin="23,10,6,10" VerticalContentAlignment="Center" />
-            <Label Content="Access Token" Grid.Column="1" Margin="23,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Width="102" Height="29"/>
-            <Label Content="Id Token" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Width="76" Height="29"/>
-            <Button x:Name="ShowIdTokenRawButton" Content="Show token" HorizontalAlignment="Left" Margin="91,15,0,0" VerticalAlignment="Top" Width="75" Click="ShowIdTokenRawButton_Click" Height="20"/>
-            <Button x:Name="ShowAccessTokenRawButton" Content="Show token" HorizontalAlignment="Left" Margin="130,15,0,0" VerticalAlignment="Top" Width="86" Grid.Column="1" Click="ShowAccessTokenRawButton_Click" Height="20"/>
-            
-        </Grid>
-        
     </Grid>
 </Window>

@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Windows;
+using System.Windows.Controls;
 using HelseID.Test.WPF.Common.Controls;
 using HelseID.Test.WPF.Common;
 using HelseID.Test.WPF.WebBrowser.EventArgs;
 using HelseID.Test.WPF.WebBrowser.Model;
 using IdentityModel.OidcClient;
+using Newtonsoft.Json.Linq;
 
 namespace HelseID.Test.WPF.WebBrowser
 {
@@ -15,6 +19,9 @@ namespace HelseID.Test.WPF.WebBrowser
     {
         private LoginWindow _login;
         private AuthInfo _result;
+        private LoginResult _loginResult;
+        private OidcClientOptions _options;
+        private List<string> _configuredScopes;
 
         public MainWindow()
         {
@@ -23,69 +30,14 @@ namespace HelseID.Test.WPF.WebBrowser
             {
                 var browserManager = new BrowserManager();
                 browserManager.Initialize();
-                SetDefaultClientConfiguration();
+                //SetDefaultClientConfiguration();
             }
             catch (Exception e)
             {
                 MessageBox.Show(
                     @"The application does not have sufficient priveleges to write to the registry. Try starting again in administrator modus if you would like the applicastion to do the neccessary configurations.");
             }
-        }
-
-        private void SetDefaultClientConfiguration()
-        {
-            AuthorityTextBox.Text = DefaultClientConfigurationValues.DefaultAuthority;
-            ClientIdTextBox.Text = DefaultClientConfigurationValues.DefaultClientId;
-            ScopeTextBox.Text = DefaultClientConfigurationValues.DefaultScope;
-            SecretTextBox.Text = DefaultClientConfigurationValues.DefaultSecret;
-            RedirectUrlTextBox.Text = DefaultClientConfigurationValues.DefaultUri;
-        }
-
-        public OidcClientOptions GetClientConfiguration()
-        {
-            var authority = AuthorityTextBox.Text;
-            var clientId = ClientIdTextBox.Text;
-            var scope = ScopeTextBox.Text.Replace(Environment.NewLine, " ");
-            var secret = SecretTextBox.Text;
-
-            var options = new OidcClientOptions()
-            {
-                Authority = string.IsNullOrEmpty(authority) ? DefaultClientConfigurationValues.DefaultAuthority : authority,
-                ClientId = string.IsNullOrEmpty(clientId) ? DefaultClientConfigurationValues.DefaultClientId : clientId,
-                RedirectUri = DefaultClientConfigurationValues.DefaultUri,
-                Scope = string.IsNullOrEmpty(scope) ? DefaultClientConfigurationValues.DefaultScope : scope,
-                ClientSecret = string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret
-            };
-
-            if (UseADFSCheckBox.IsChecked.HasValue && UseADFSCheckBox.IsChecked.Value)
-            {
-                options.Policy =
-                    new Policy()
-                    {
-                        RequireAccessTokenHash = false //ADFS 2016 spesifikk kode - ikke krev hash for access_token
-                    };
-            }
-            options.BrowserTimeout = TimeSpan.FromSeconds(5);
-
-            return options;
-        }
-
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {                                    
-            var clientConfig = GetClientConfiguration();
-
-            if (!NetworkHelper.StsIsAvailable(clientConfig.Authority))
-            {
-                MessageBox.Show("Could not reach the address:" + clientConfig.Authority);
-            }
-
-            _login = new LoginWindow(clientConfig);
-            
-            _login.OnLoginSuccess += LoginSuccess;
-            _login.OnLoginError += LoginError;
-
-            _login.ShowDialog();
-        }
+        }        
 
         private void LoginError(object sender, LoginEventArgs e)
         {
@@ -129,6 +81,153 @@ namespace HelseID.Test.WPF.WebBrowser
             IdentityTokenClaimsTextBox.Dispatcher.Invoke(() => { IdentityTokenClaimsTextBox.Text = idTokenAsText; });
         }
 
+        private void UpdateConfigurationView()
+        {
+            ClientIdLabel.Content = _options.ClientId;
+            SecretLabel.Content = _options.ClientSecret;
+            RedirectUrlLabel.Content = _options.RedirectUri;
+            AuthoritiesLabel.Content = _options.Authority;
+        }
+
+        private void UpdateScopesList()
+        {
+            ScopesList.Children.Clear();
+            foreach (var scope in Scopes.DefaultScopes)
+            {
+                var scopeCheckBox = new CheckBox()
+                {
+                    Content = scope,                    
+                };
+
+                if (_configuredScopes.Contains(scope))
+                    scopeCheckBox.IsChecked = true;
+
+                scopeCheckBox.Unchecked += (checkbox, args) =>
+                {
+                    //Hack for å unngå at brukeren velger noe her
+                    args.Handled = true;
+                    UpdateScopesList();
+                };
+
+                scopeCheckBox.Checked += (checkbox, args) =>
+                {
+                    //Hack for å unngå at brukeren velger noe her
+                    args.Handled = true;
+                    UpdateScopesList();
+                };
+
+                ScopesList.Children.Add(scopeCheckBox);
+            }
+
+        }
+
+        private async void CallApi(Uri url)
+        {
+            var client = new HttpClient();
+
+            if (_result == null)
+            {
+                return;
+            }
+
+            client.BaseAddress = url;
+
+            client.SetBearerToken(_result.AccessToken);
+            try
+            {
+                var result = await client.GetAsync(url);
+
+                result.EnsureSuccessStatusCode();
+
+                var content = await result.Content.ReadAsStringAsync();
+
+                var json = JArray.Parse(content).ToString();
+
+                var viewer = new TextViewerWindow { Text = json };
+
+                viewer.ShowDialog();
+            }
+            catch (HttpRequestException requestException)
+            {
+                MessageBox.Show($"{requestException.Message}. The request failed due to an underlying issue such as network connectivity, DNS failure, server certificate validation or timeout.");
+            }
+            finally
+            {
+                client.Dispose();
+            }
+        }
+
+        private void ConfigSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new OidcClientSettingsWindow(_configuredScopes, _options);
+            settingsWindow.OptionsChanged += (s, updatedOptions) =>
+            {
+                _options = updatedOptions.Options;
+                _configuredScopes = updatedOptions.Scopes;
+
+                UpdateConfigurationView();
+                UpdateScopesList();
+            };
+            var result = settingsWindow.ShowDialog();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (_options == null)
+            {
+
+                MessageBox.Show("You must create a client configuration before logging in..", "Missing client configuration");
+                return;
+            }
+
+            //if (!NetworkHelper.StsIsAvailable(_options.Authority))
+            //{
+            //    MessageBox.Show("Could not reach the address:" + _options.Authority);
+            //}
+
+            _login = new LoginWindow(_options);
+
+            _login.OnLoginSuccess += LoginSuccess;
+            _login.OnLoginError += LoginError;
+
+            _login.ShowDialog();
+        }
+
+        private void CallApiButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_result == null)
+            {
+                MessageBox.Show("You need to authenticate before you can call the API");
+                return;
+            }
+
+            var apiWindow = new ApiSettingsWindow();
+            var result = apiWindow.ShowDialog();
+
+            if (!result.HasValue || !result.Value) return;
+
+            var apiUrl = apiWindow.ApiAddress;
+
+            try
+            {
+                var url = new Uri(apiUrl);
+
+                if (!url.IsWellFormedOriginalString())
+                    throw new UriFormatException();
+
+                CallApi(url);
+            }
+            catch (UriFormatException uriFormatException)
+            {
+                MessageBox.Show($"The Url you entered was invalid : {uriFormatException.Message}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw;
+            }
+        }
+
         private void LogOutButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -155,5 +254,7 @@ namespace HelseID.Test.WPF.WebBrowser
             var view = new TokenViewerWindow { Token = content };
             view.ShowDialog();
         }
+
+
     }
 }

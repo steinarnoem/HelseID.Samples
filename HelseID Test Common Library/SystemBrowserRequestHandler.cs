@@ -9,7 +9,7 @@ namespace HelseID.Test.WPF.Common
 {
     public class SystemBrowserRequestHandler: IDisposable
     {
-        public const string DefaultUri = "http://127.0.0.1:7890/";
+        public const string DefaultUri = "http://127.0.0.1:7891/";
 
         private HttpListener Listener { get; }
 

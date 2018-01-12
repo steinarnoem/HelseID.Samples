@@ -8,6 +8,7 @@ using HelseID.Test.WPF.Common;
 using HelseID.Test.WPF.WebBrowser.EventArgs;
 using HelseID.Test.WPF.WebBrowser.Model;
 using IdentityModel.OidcClient;
+using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json.Linq;
 
 namespace HelseID.Test.WPF.WebBrowser
@@ -195,6 +196,11 @@ namespace HelseID.Test.WPF.WebBrowser
 
         private void CallApiButton_Click(object sender, RoutedEventArgs e)
         {
+            
+            var queue = new SnackbarMessageQueue(new TimeSpan(0,0,0,20));
+            MySnackbar.MessageQueue = queue;
+            queue.Enqueue("Wow, easy!");
+
             if (_result == null)
             {
                 MessageBox.Show("You need to authenticate before you can call the API");

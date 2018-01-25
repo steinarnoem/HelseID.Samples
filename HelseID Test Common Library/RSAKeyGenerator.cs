@@ -13,7 +13,7 @@ namespace HelseID.Test.WPF.Common
     {
         private const string KeyName = "HelseID_DCR_Key";
         public const int Size = 4096;
-        public const string JwsAlgorithmName = "RS512";
+        public const string JwsAlgorithmName = Microsoft.IdentityModel.Tokens.SecurityAlgorithms.RsaSha512; //"RS512";
 
         /// <summary>
         /// Creates a new RSA key pair, and returns the key as Xml formatted string

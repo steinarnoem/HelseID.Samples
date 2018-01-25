@@ -139,7 +139,10 @@ namespace HelseID.Test.WPF
 
         public object GetClientAssertionParameters(OidcClientOptions clientOptions)
         {
+            //TODO: hent info fra disco med disco client - for token endpoin
             var assertion = JwtGenerator.Generate(clientOptions);
+            JwtGenerator.ValidateToken(assertion, _options.ClientId);
+            var rsaKeyAsXml = RSAKeyGenerator.GetPublicKeyAsXml();
 
             return new { client_assertion = assertion, client_assertion_type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer };
         }

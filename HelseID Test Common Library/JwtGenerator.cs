@@ -10,7 +10,7 @@ namespace HelseID.Test.WPF.Common
 {
     public class JwtGenerator
     {
-        public static List<string> ValidAudiences = new List<string> { "https://helseid-sts.nhn.no", "https://helseid-sts.test.nhn.no", "https://helseid-sts.utvikling.nhn.no"};
+        public static List<string> ValidAudiences = new List<string> { "https://localhost:44366/connect/token", "https://helseid-sts.utvikling.nhn.no", "https://helseid-sts.test.nhn.no", "https://helseid-sts.utvikling.nhn.no"};
         private const double DefaultExpiryInHours = 10;
 
         /// <summary>
@@ -25,8 +25,8 @@ namespace HelseID.Test.WPF.Common
         {
             if (signingCredentials == null)
                 signingCredentials = GetSigningCredentials();
-
-            var jwt = CreateJwt(clientId, audience, expiryDate, signingCredentials);
+            
+            var jwt = CreateJwt(clientId, audience + "", expiryDate, signingCredentials);
             var handler = new JwtSecurityTokenHandler();
             var token = handler.WriteToken(jwt);
             return token;
@@ -52,17 +52,18 @@ namespace HelseID.Test.WPF.Common
                 new Claim("jti", Guid.NewGuid().ToString("N"))
             };
 
-            var token = new JwtSecurityToken(clientId, audience, claims, DateTime.Now, DateTime.Now.AddHours(10), signingCredentials);
-
+            var token = new JwtSecurityToken(clientId, audience + "connect/token", claims, DateTime.Now, DateTime.Now.AddHours(10), signingCredentials);
+            
             return token;
         }
 
         private static SigningCredentials GetSigningCredentials()
         {            
-            var rsa = RSAKeyGenerator.GetRsaParameters();
+            var rsa = RSAKeyGenerator.GetRsaParameters();            
             var securityKey = new RsaSecurityKey(rsa);
 
-            var signingCredentials = new SigningCredentials(securityKey, RSAKeyGenerator.JwsAlgorithmName);
+            var signingCredentials = new SigningCredentials(securityKey, Microsoft.IdentityModel.Tokens.SecurityAlgorithms.RsaSha512);//RSAKeyGenerator.JwsAlgorithmName);
+            var kid = signingCredentials.Kid;
             return signingCredentials;
         }
 

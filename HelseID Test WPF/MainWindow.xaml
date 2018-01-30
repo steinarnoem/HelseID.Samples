@@ -116,5 +116,16 @@
             </StackPanel>
         </materialDesign:Card>
 
+        <materialDesign:Card Grid.Row="2" Grid.Column="2" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Vertical">
+                <Label Content="RSA Public Key" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                <TextBox x:Name="RsaPublicKeyTextBox" Height="100" TextWrapping="WrapWithOverflow" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="GetRsaPublicKeyButton" Content="Create new RSA Key" Margin="0,5,0,0" HorizontalAlignment="Center" Click="GetRsaPublicKeyButton_Click" />
+                    <Button x:Name="CopyRsaPublicKeyButton" Content="Copy" Margin="5,5,0,0" HorizontalAlignment="Center" Click="CopyRsaPublicKey_Click" />
+                </StackPanel>
+                    
+            </StackPanel>
+        </materialDesign:Card>
     </Grid>
 </Window>

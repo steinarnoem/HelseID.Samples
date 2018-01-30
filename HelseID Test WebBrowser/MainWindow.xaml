@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HelseID.Test.WPF.WebBrowser"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"        
+        xmlns:controls="clr-namespace:HelseID.Test.WPF.Common.Controls;assembly=HelseID.Test.WPF.Common.Controls"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -17,8 +18,8 @@
         Height="783.758" 
         Width="1197.989" 
         ResizeMode="NoResize">
+
     <StackPanel>
-        
         <Grid x:Name="MainGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="320*"></RowDefinition>
@@ -37,6 +38,8 @@
                     <materialDesign:Snackbar x:Name="MySnackbar" MessageQueue="{materialDesign:MessageQueue}" />
                 </Grid>
             </materialDesign:DialogHost>
+
+
 
             <materialDesign:Card Grid.Row="0" Grid.Column="0" Height="370" Padding="32,5,32,32" Margin="16">
                 <StackPanel Orientation="Vertical">
@@ -93,7 +96,7 @@
             </StackPanel>
 
 
-            <materialDesign:Card Grid.Row="0" Grid.Column="1" Height="370" Padding="32,5,32,32" Margin="16">
+            <materialDesign:Card Grid.Row="0" Grid.Column="1" Padding="32,5,32,32" Margin="16" VerticalAlignment="Stretch">
                 <StackPanel Orientation="Vertical">
                     <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20">Selected Scopes</Label>
                     <StackPanel x:Name="ScopesList" Orientation="Vertical">
@@ -123,6 +126,31 @@
                 <Button x:Name="ShowAccessTokenRawButton" Content="Show token" Margin="0,5,0,0" HorizontalAlignment="Center" Click="ShowAccessTokenRawButton_Click" />
             </StackPanel>
             </materialDesign:Card>
+
+            <materialDesign:Card Grid.Row="2" Grid.Column="2" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="RSA Public Key" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                    <TextBox x:Name="RsaPublicKeyTextBox" Height="100" TextWrapping="WrapWithOverflow" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="GetRsaPublicKeyButton" Content="Create new RSA Key" Margin="0,5,0,0" HorizontalAlignment="Center" Click="GetRsaPublicKeyButton_Click" />
+                        <Button x:Name="CopyRsaPublicKeyButton" Content="Copy" Margin="5,5,0,0" HorizontalAlignment="Center" Click="CopyRsaPublicKey_Click" />
+                    </StackPanel>
+                    
+                </StackPanel>
+            </materialDesign:Card>
+
+
+            <!--<materialDesign:DialogHost Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" x:Name="ApiLoadingDialog" IsOpen="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.459,0.232" Margin="-9,0,9,0">
+                <materialDesign:DialogHost.DialogContent>
+                    <StackPanel>
+                        <Label Content="Calling API"></Label>
+                        <controls:SpinnerPiston x:Name="Piston" HorizontalAlignment="Center" VerticalAlignment="Center"></controls:SpinnerPiston>
+                    </StackPanel>
+                </materialDesign:DialogHost.DialogContent>
+                <StackPanel>
+
+                </StackPanel>
+            </materialDesign:DialogHost>-->
         </Grid>
     </StackPanel>
 </Window>

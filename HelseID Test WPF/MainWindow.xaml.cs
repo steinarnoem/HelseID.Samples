@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using HelseID.Test.WPF.Common.Controls;
 using HelseID.Test.WPF.Common;
+using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json.Linq;
@@ -89,12 +90,19 @@ namespace HelseID.Test.WPF
         {
             object extraParams = null;
 
+            var discoveryDocument = await GetDiscoveryDocument(client.Options.Authority);
+
             Dispatcher.Invoke(() =>
             {
-                if (UseJwtBearerClientAuthentication.IsChecked.HasValue && UseJwtBearerClientAuthentication.IsChecked.Value)
-                    extraParams = GetClientAssertionParameters(client.Options);
+                if (UseJwtBearerClientAuthentication.IsChecked.HasValue &&
+                    UseJwtBearerClientAuthentication.IsChecked.Value)
+                {
+                    var clientAssertion = ClientAssertion.CreateWithRsaKeys(client.Options.ClientId, discoveryDocument, JwtGenerator.SigningMethod.RsaSecurityKey);
+                    extraParams = clientAssertion;
+                }
+                    
             });
-            
+
             var result = await client.ProcessResponseAsync(formData, state, extraParams);
 
             HandleLoginResult(result);
@@ -137,14 +145,20 @@ namespace HelseID.Test.WPF
             return new { acr_values = preselectIdp, prompt = "Login" };
         }
 
-        public object GetClientAssertionParameters(OidcClientOptions clientOptions)
-        {
-            //TODO: hent info fra disco med disco client - for token endpoin
-            var assertion = JwtGenerator.Generate(clientOptions);
-            JwtGenerator.ValidateToken(assertion, _options.ClientId);
-            var rsaKeyAsXml = RSAKeyGenerator.GetPublicKeyAsXml();
+        //public object GetClientAssertionParameters(string clientId, DiscoveryResponse discoDocument)
+        //{            
+        //    var assertion = JwtGenerator.GenerateJwt(clientId, discoDocument.TokenEndpoint);
+        //    //JwtGenerator.ValidateToken(assertion, _options.ClientId);
 
-            return new { client_assertion = assertion, client_assertion_type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer };
+        //    return new { client_assertion = assertion, client_assertion_type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer };
+        //}
+
+        private async Task<DiscoveryResponse> GetDiscoveryDocument(string authority)
+        {
+            var discoClient = new DiscoveryClient(authority);
+            var discoveryResponse = await discoClient.GetAsync();
+
+            return discoveryResponse;
         }
 
 
@@ -314,14 +328,18 @@ namespace HelseID.Test.WPF
             var result = settingsWindow.ShowDialog();            
         }
 
-        private void DialogHost_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
-        {
 
+        private void GetRsaPublicKeyButton_Click(object sender, RoutedEventArgs e)
+        {
+            var rsaPublicKey = RSAKeyGenerator.CreateNewKey(false);
+            RsaPublicKeyTextBox.Text = rsaPublicKey;
         }
 
-        private void DialogHost_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
+        private void CopyRsaPublicKey_Click(object sender, RoutedEventArgs e)
         {
-
+            Clipboard.SetText(RsaPublicKeyTextBox.Text);
+            RsaPublicKeyTextBox.SelectAll();
+            RsaPublicKeyTextBox.Focus();
         }
     }
 }

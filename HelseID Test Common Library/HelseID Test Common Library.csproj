@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorities.cs" />
+    <Compile Include="ClientAssertion.cs" />
     <Compile Include="SystemBrowserRequestHandler.cs" />
     <Compile Include="RsaCryptoServiceHelper.cs" />
     <Compile Include="JwtGenerator.cs" />

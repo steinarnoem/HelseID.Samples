@@ -7,7 +7,7 @@
     <ProjectGuid>{9138EA1E-C1A9-4201-B47D-4064D788A850}</ProjectGuid>
     <OutputType>library</OutputType>
     <RootNamespace>HelseID.Test.WPF.Common.Controls</RootNamespace>
-    <AssemblyName>HelseID Test Common Controls</AssemblyName>
+    <AssemblyName>HelseID.Test.WPF.Common.Controls</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -144,6 +144,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SpinnerPiston.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TextViewerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -157,6 +161,9 @@
     </Compile>
     <Compile Include="OidcClientSettingsWindow.xaml.cs">
       <DependentUpon>OidcClientSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SpinnerPiston.xaml.cs">
+      <DependentUpon>SpinnerPiston.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextViewerWindow.xaml.cs">
       <DependentUpon>TextViewerWindow.xaml</DependentUpon>

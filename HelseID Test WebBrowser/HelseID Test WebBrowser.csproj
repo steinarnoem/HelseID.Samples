@@ -7,7 +7,7 @@
     <ProjectGuid>{ED57C1C7-D2E3-481F-849A-28BC7219F97F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>HelseID.Test.WPF.WebBrowser</RootNamespace>
-    <AssemblyName>HelseID WPF Test WebBrowser</AssemblyName>
+    <AssemblyName>HelseID.Test.WPF.WebBrowser</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

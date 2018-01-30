@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using HelseID.Test.WPF.Common.Controls;
@@ -32,6 +33,17 @@ namespace HelseID.Test.WPF.WebBrowser
                 var browserManager = new BrowserManager();
                 browserManager.Initialize();
                 //SetDefaultClientConfiguration();
+                ShowApiLoadingDialog = false;
+
+                try
+                {
+                    var rsaPublicKey = RSAKeyGenerator.GetPublicKeyAsXml();
+                    RsaPublicKeyTextBox.Text = rsaPublicKey;
+                }
+                catch (Exception e)
+                {
+                    RsaPublicKeyTextBox.Text = "No RSA public key available";
+                }
             }
             catch (Exception e)
             {
@@ -120,10 +132,10 @@ namespace HelseID.Test.WPF.WebBrowser
                 ScopesList.Children.Add(scopeCheckBox);
             }
 
-        }
+        }        
 
         private async void CallApi(Uri url)
-        {
+        {            
             var client = new HttpClient();
 
             if (_result == null)
@@ -194,12 +206,22 @@ namespace HelseID.Test.WPF.WebBrowser
             _login.ShowDialog();
         }
 
-        private void CallApiButton_Click(object sender, RoutedEventArgs e)
+        public bool ShowApiLoadingDialog
         {
+            get;
+            set;
+        }
+
+        private async void CallApiButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            //var queue = new SnackbarMessageQueue(new TimeSpan(0,0,0,20));
+            //MySnackbar.MessageQueue = queue;
+            //queue.Enqueue("Wow, easy!");
+
+            //await ApiLoadingDialog.ShowDialog(this);
+            ShowApiLoadingDialog = true;
             
-            var queue = new SnackbarMessageQueue(new TimeSpan(0,0,0,20));
-            MySnackbar.MessageQueue = queue;
-            queue.Enqueue("Wow, easy!");
 
             if (_result == null)
             {
@@ -209,7 +231,7 @@ namespace HelseID.Test.WPF.WebBrowser
 
             var apiWindow = new ApiSettingsWindow();
             var result = apiWindow.ShowDialog();
-
+            
             if (!result.HasValue || !result.Value) return;
 
             var apiUrl = apiWindow.ApiAddress;
@@ -255,12 +277,23 @@ namespace HelseID.Test.WPF.WebBrowser
                 MessageBox.Show("The Id Token is not available - please authenticate again");
         }
 
+        private void GetRsaPublicKeyButton_Click(object sender, RoutedEventArgs e)
+        {
+            var rsaPublicKey = RSAKeyGenerator.CreateNewKey(false);
+            RsaPublicKeyTextBox.Text = rsaPublicKey;
+        }
+
         private static void ShowTokenViewer(string content)
         {
             var view = new TokenViewerWindow { Token = content };
             view.ShowDialog();
         }
 
-
+        private void CopyRsaPublicKey_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(RsaPublicKeyTextBox.Text);
+            RsaPublicKeyTextBox.SelectAll();
+            RsaPublicKeyTextBox.Focus();
+        }
     }
 }

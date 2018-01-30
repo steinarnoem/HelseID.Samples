@@ -14,6 +14,7 @@
         xmlns:local="clr-namespace:HelseID.Test.WPF"
         mc:Ignorable="d"
         Title="API settings" Height="168.116" Width="417.391" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    
     <Grid>
         <TextBox x:Name="ApiAddressTextBox" HorizontalAlignment="Left" Height="23" Margin="10,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="389" Text="https://hid-testapi-umla.azurewebsites.net/Api/ReturnTokenContent" TextChanged="ApiAddressTextBox_TextChanged" FontSize="12"/>
         <Button x:Name="OKButton" Content="OK" HorizontalAlignment="Left" Margin="252,86,0,0" VerticalAlignment="Top" Width="147" Height="41" Click="OKButton_Click"/>

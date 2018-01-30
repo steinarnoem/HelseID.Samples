@@ -197,8 +197,13 @@ namespace HelseID.Test.WPF.WebBrowser
             //{
             //    MessageBox.Show("Could not reach the address:" + _options.Authority);
             //}
+            var signingMethod = JwtGenerator.SigningMethod.None;
+            if (UseJwtBearerClientAuthentication.IsChecked.HasValue && UseJwtBearerClientAuthentication.IsChecked.Value)
+            {
+                signingMethod = JwtGenerator.SigningMethod.RsaSecurityKey;
+            }
 
-            _login = new LoginWindow(_options);
+            _login = new LoginWindow(_options, signingMethod);
 
             _login.OnLoginSuccess += LoginSuccess;
             _login.OnLoginError += LoginError;

@@ -10,7 +10,7 @@ namespace HelseID.Test.WPF.Common
     public class JwtGenerator
     {
         public enum SigningMethod  {
-            X509SecurityKey, RsaSecurityKey
+            None, X509SecurityKey, RsaSecurityKey
         };
 
         public static List<string> ValidAudiences = new List<string> { "https://localhost:44366/connect/token", "https://helseid-sts.utvikling.nhn.no", "https://helseid-sts.test.nhn.no", "https://helseid-sts.utvikling.nhn.no"};

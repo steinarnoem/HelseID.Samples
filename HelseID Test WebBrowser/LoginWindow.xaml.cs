@@ -21,6 +21,7 @@ namespace HelseID.Test.WPF.WebBrowser
         private OidcClient _client;
 
         private readonly OidcClientOptions _clientOptions;
+        private readonly JwtGenerator.SigningMethod _signingMethod;
         private AuthorizeState _state;
 
         public event LoginEventHandler OnLoginSuccess;
@@ -30,10 +31,11 @@ namespace HelseID.Test.WPF.WebBrowser
             InitializeComponent();
         }
 
-        public LoginWindow(OidcClientOptions options)
+        public LoginWindow(OidcClientOptions options, JwtGenerator.SigningMethod signingMethod)
         {
             InitializeComponent();
             _clientOptions = options;
+            _signingMethod = signingMethod;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -61,7 +63,18 @@ namespace HelseID.Test.WPF.WebBrowser
         private async Task HandleLogin(NavigatingCancelEventArgs e)
         {
             var response = new WebBrowserDocument((IHTMLDocument3)webBrowser.Document);
-            var result = await _client.ProcessResponseAsync(response.Data, _state);            
+
+            object extraParams = null;
+
+            var discoveryDocument = await OidcDiscoveryHelper.GetDiscoveryDocument(_clientOptions.Authority);
+
+                if (_signingMethod != JwtGenerator.SigningMethod.None)
+                {
+                    var clientAssertion = ClientAssertion.CreateWithRsaKeys(_clientOptions.ClientId, discoveryDocument, _signingMethod);
+                    extraParams = clientAssertion;
+                }            
+
+            var result = await _client.ProcessResponseAsync(response.Data, _state, extraParams);
 
             if (result.IsError)
             {

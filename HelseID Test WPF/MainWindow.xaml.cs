@@ -97,8 +97,8 @@ namespace HelseID.Test.WPF
                 if (UseJwtBearerClientAuthentication.IsChecked.HasValue &&
                     UseJwtBearerClientAuthentication.IsChecked.Value)
                 {
-                    var clientAssertion = ClientAssertion.CreateWithRsaKeys(client.Options.ClientId, discoveryDocument, JwtGenerator.SigningMethod.RsaSecurityKey);
-                    extraParams = clientAssertion;
+                    extraParams = ClientAssertion.CreateWithRsaKeys(client.Options.ClientId, discoveryDocument, JwtGenerator.SigningMethod.RsaSecurityKey);
+                    //extraParams = new {client_assertion=clientAssertion.Assertion,client_assertion_type=IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer};
                 }
                     
             });

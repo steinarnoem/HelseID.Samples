@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.WPF.SystemBrowser", "HelseID Test WPF\HelseID.Clients.WPF.SystemBrowser.csproj", "{1665423A-C3E6-4935-9BFA-33ABF2E4F6B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.WPF.SystemBrowser", "HelseID.Clients.WPF.SystemBrowser\HelseID.Clients.WPF.SystemBrowser.csproj", "{1665423A-C3E6-4935-9BFA-33ABF2E4F6B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.WPF.EmbeddedBrowser", "HelseID Test WebBrowser\HelseID.Clients.WPF.EmbeddedBrowser.csproj", "{ED57C1C7-D2E3-481F-849A-28BC7219F97F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.WPF.EmbeddedBrowser", "HelseID.Clients.WPF.EmbeddedBrowser\HelseID.Clients.WPF.EmbeddedBrowser.csproj", "{ED57C1C7-D2E3-481F-849A-28BC7219F97F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.Common", "HelseID Test Common Library\HelseID.Clients.Common.csproj", "{ECA95D1F-2836-4326-AF90-F6530DA66CE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.Common", "HelseID.Clients.Common\HelseID.Clients.Common.csproj", "{ECA95D1F-2836-4326-AF90-F6530DA66CE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.WPF.Controls", "HelseID Test Common Controls\HelseID.Clients.WPF.Controls.csproj", "{9138EA1E-C1A9-4201-B47D-4064D788A850}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.WPF.Controls", "HelseID.Clients.WPF.Controls\HelseID.Clients.WPF.Controls.csproj", "{9138EA1E-C1A9-4201-B47D-4064D788A850}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

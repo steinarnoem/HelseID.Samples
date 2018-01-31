@@ -1,0 +1,156 @@
+﻿<Window x:Class="HelseID.Clients.WPF.EmbeddedBrowser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HelseID.Clients.WPF.EmbeddedBrowser"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"        
+        xmlns:controls="clr-namespace:HelseID.Clients.WPF.Controls;assembly=HelseID.Clients.WPF.Controls"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"        
+        mc:Ignorable="d"
+        Title="HelseID Test - Configuration of WPF client using embedded WebBrowser control" 
+        Height="783.758" 
+        Width="1197.989" 
+        ResizeMode="NoResize">
+
+    <StackPanel>
+        <Grid x:Name="MainGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="320*"></RowDefinition>
+                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition Height="250*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <materialDesign:DialogHost Grid.Row="0" VerticalAlignment="Top" Grid.Column="1" SnackbarMessageQueue="{Binding ElementName=MySnackbar, Path=MessageQueue}">
+                <Grid>
+                    <!-- app content here -->
+                    <materialDesign:Snackbar x:Name="MySnackbar" MessageQueue="{materialDesign:MessageQueue}" />
+                </Grid>
+            </materialDesign:DialogHost>
+
+
+
+            <materialDesign:Card Grid.Row="0" Grid.Column="0" Height="370" Padding="32,5,32,32" Margin="16">
+                <StackPanel Orientation="Vertical">
+                    <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20">Current client configuration</Label>
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Authority:" HorizontalAlignment="Left" Margin="0"  />
+                        <Label Grid.Row="0"  x:Name="AuthoritiesLabel" Margin="0"  Grid.Column="1" Content="Not Configured" />
+
+                        <Label Grid.Row="1" Grid.Column="0" Content="ClientId:" HorizontalAlignment="Left" Margin="0" />
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="ClientIdLabel" Margin="0" Content="Not Configured" />
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Secret:" HorizontalAlignment="Left" Margin="0"  />
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="SecretLabel" Margin="0" Content="Not Configured" />
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="RedirectUrl:" HorizontalAlignment="Left" Margin="0"   />
+                        <Label Grid.Row="3" Grid.Column="1" x:Name="RedirectUrlLabel" Margin="0" Content="Not Configured" />
+
+                        <Label Grid.Row="4" Grid.Column="0" Content="IdP:" HorizontalAlignment="Left" Margin="0" />
+                        <Label Grid.Row="4" Grid.Column="1"  x:Name="PreselectIdpLabel" Margin="0" Content="Not Configured" />
+
+                        <CheckBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="UseADFSCheckBox" Content="Use ADFS (Windows Server 2016)" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0"  />
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="0" Grid.Column="0" Grid.ColumnSpan="2">
+                            <Button x:Name="ConfigSettings" Content="Settings" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Click="ConfigSettings_Click"/>
+                        </StackPanel>
+
+                    </Grid>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                <CheckBox x:Name="UseJwtBearerClientAuthentication" Margin="32,10,32,10" Content="Use Jwt bearer client authentication"></CheckBox>
+                <StackPanel Orientation="Horizontal" Margin="32,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="LoginButton" Content="Log in" HorizontalAlignment="Center" VerticalAlignment="Center"  Click="Button_Click" Margin="0"/>
+                        <Button x:Name="LogOutButton" Content="Log out" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,10,0" Click="LogOutButton_Click" />
+                        <Button x:Name="CallApiButton" Content="Call API" HorizontalAlignment="Center" VerticalAlignment="Center" Click="CallApiButton_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+
+            <materialDesign:Card Grid.Row="0" Grid.Column="1" Padding="32,5,32,32" Margin="16" VerticalAlignment="Stretch">
+                <StackPanel Orientation="Vertical">
+                    <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20">Selected Scopes</Label>
+                    <StackPanel x:Name="ScopesList" Orientation="Vertical">
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <materialDesign:Card Grid.Row="0" Grid.Column="2" Height="370" Padding="32,5,32,32" Margin="16">
+                <StackPanel Orientation="Vertical">
+                    <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20">Config Info</Label>
+                    <TextBox Height="268" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Text="Fødselsnummer (BankId):&#xA;24019491117&#xA;24019491036&#xA;24019490919&#xA;&#xA;Credentials:&#xA;Engangskode: otp&#xA;Personlig passord: qwer1234&#xA;&#xA;To jump directly to ID-Porten:&#xA;idP:idporten-oidc&#xD;&#xA;&#xD;&#xA;ClientID HelseID Test:&#xD;&#xA;nhn.test.wpf.defaultbrowser&#xD;&#xA;&#xD;&#xA;Secret HelseID Test:&#xD;&#xA;nDq53nMQOeCnNdz21BlcweFVq7pNhiWfR0w3Yc2eS6lpn5Vy5z0Bvd5xm00fwJrp"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <materialDesign:Card Grid.Row="2" Grid.Column="0" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Id Token" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                    <TextBox x:Name="IdentityTokenClaimsTextBox" Height="100" AcceptsReturn="True" TextWrapping="Wrap" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+                <Button x:Name="ShowIdTokenRawButton" Content="Show token" Margin="0,5,0,0" HorizontalAlignment="Center" Click="ShowIdTokenRawButton_Click" />                
+            </StackPanel>
+            </materialDesign:Card>
+
+            <materialDesign:Card Grid.Row="2" Grid.Column="1" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Access Token" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                    <TextBox x:Name="AccessTokenClaimsTextBox" Height="100" TextWrapping="WrapWithOverflow" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+                <Button x:Name="ShowAccessTokenRawButton" Content="Show token" Margin="0,5,0,0" HorizontalAlignment="Center" Click="ShowAccessTokenRawButton_Click" />
+            </StackPanel>
+            </materialDesign:Card>
+
+            <materialDesign:Card Grid.Row="2" Grid.Column="2" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="RSA Public Key" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                    <TextBox x:Name="RsaPublicKeyTextBox" Height="100" TextWrapping="WrapWithOverflow" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="GetRsaPublicKeyButton" Content="Create new RSA Key" Margin="0,5,0,0" HorizontalAlignment="Center" Click="GetRsaPublicKeyButton_Click" />
+                        <Button x:Name="CopyRsaPublicKeyButton" Content="Copy" Margin="5,5,0,0" HorizontalAlignment="Center" Click="CopyRsaPublicKey_Click" />
+                    </StackPanel>
+                    
+                </StackPanel>
+            </materialDesign:Card>
+
+
+            <!--<materialDesign:DialogHost Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" x:Name="ApiLoadingDialog" IsOpen="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.459,0.232" Margin="-9,0,9,0">
+                <materialDesign:DialogHost.DialogContent>
+                    <StackPanel>
+                        <Label Content="Calling API"></Label>
+                        <controls:SpinnerPiston x:Name="Piston" HorizontalAlignment="Center" VerticalAlignment="Center"></controls:SpinnerPiston>
+                    </StackPanel>
+                </materialDesign:DialogHost.DialogContent>
+                <StackPanel>
+
+                </StackPanel>
+            </materialDesign:DialogHost>-->
+        </Grid>
+    </StackPanel>
+</Window>

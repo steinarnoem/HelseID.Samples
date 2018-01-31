@@ -1,11 +1,7 @@
-﻿using IdentityModel.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using IdentityModel.Client;
 
-namespace HelseID.Test.WPF.Common
+namespace HelseID.Clients.Common
 {
     public class OidcDiscoveryHelper
     {

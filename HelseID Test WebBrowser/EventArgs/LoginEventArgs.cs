@@ -1,6 +1,6 @@
 ﻿using IdentityModel.OidcClient;
 
-namespace HelseID.Test.WPF.WebBrowser.EventArgs
+namespace HelseID.Clients.WPF.EmbeddedBrowser.EventArgs
 {
     public class LoginEventArgs: System.EventArgs
     {

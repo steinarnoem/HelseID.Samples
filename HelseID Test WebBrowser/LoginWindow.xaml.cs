@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Windows.Navigation;
-using HelseID.Test.WPF.Common;
-using HelseID.Test.WPF.WebBrowser.EventArgs;
-using HelseID.Test.WPF.WebBrowser.Model;
+using HelseID.Clients.Common;
+using HelseID.Clients.WPF.EmbeddedBrowser.EventArgs;
+using HelseID.Clients.WPF.EmbeddedBrowser.Model;
 using IdentityModel.OidcClient;
 using mshtml;
 
-namespace HelseID.Test.WPF.WebBrowser
+namespace HelseID.Clients.WPF.EmbeddedBrowser
 {
     public delegate void LoginEventHandler(object sender, LoginEventArgs e);
     

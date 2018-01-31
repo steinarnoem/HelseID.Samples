@@ -1,4 +1,4 @@
-﻿namespace HelseID.Test.WPF.WebBrowser.Model
+﻿namespace HelseID.Clients.WPF.EmbeddedBrowser.Model
 {
     internal class AuthInfo
     {

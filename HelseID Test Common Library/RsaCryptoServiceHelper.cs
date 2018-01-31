@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace HelseID.Test.WPF.Common
+namespace HelseID.Clients.Common
 {
     public class RsaCryptoServiceHelper
     {
@@ -27,7 +27,7 @@ namespace HelseID.Test.WPF.Common
         private RSACryptoServiceProvider GenerateKeys()
         {
             try
-            {                
+            {
                 var cspParameters = new CspParameters { KeyContainerName = KeyContainerName, Flags = CspProviderFlags.UseMachineKeyStore };
 
                 var rsa = new RSACryptoServiceProvider(4096, cspParameters) { PersistKeyInCsp = true };
@@ -61,8 +61,8 @@ namespace HelseID.Test.WPF.Common
         public bool CheckIfKeysExist()
         {
             var cspParameters = new CspParameters
-            {                
-                KeyContainerName = KeyContainerName                
+            {
+                KeyContainerName = KeyContainerName
             };
 
             RSACryptoServiceProvider provider = null;
@@ -70,7 +70,7 @@ namespace HelseID.Test.WPF.Common
             {
                 provider = new RSACryptoServiceProvider(cspParameters);
             }
-            catch (CryptographicException e)
+            catch (CryptographicException)
             {
                 return false;
             }
@@ -80,7 +80,7 @@ namespace HelseID.Test.WPF.Common
             }
 
             return true;
-        }     
+        }
 
         private RSACryptoServiceProvider GetKeyFromContainer()
         {
@@ -103,7 +103,7 @@ namespace HelseID.Test.WPF.Common
         {
             try
             {
-                var cp = new CspParameters { KeyContainerName = KeyContainerName};
+                var cp = new CspParameters { KeyContainerName = KeyContainerName };
 
                 var rsa = new RSACryptoServiceProvider(cp) { PersistKeyInCsp = false };
 

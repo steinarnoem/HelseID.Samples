@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HelseID.Test.WPF.WebBrowser.Properties {
+namespace HelseID.Clients.WPF.EmbeddedBrowser.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace HelseID.Test.WPF.WebBrowser.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("HelseID.Test.WPF.WebBrowser.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("HelseID.Clients.WPF.EmbeddedBrowser.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

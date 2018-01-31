@@ -210,13 +210,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HelseID Test Common Controls\HelseID Test Common Controls.csproj">
+    <ProjectReference Include="..\HelseID Test Common Controls\HelseID.Clients.WPF.Controls.csproj">
       <Project>{9138EA1E-C1A9-4201-B47D-4064D788A850}</Project>
-      <Name>HelseID Test Common Controls</Name>
+      <Name>HelseID.Clients.WPF.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HelseID Test Common Library\HelseID Test Common Library.csproj">
+    <ProjectReference Include="..\HelseID Test Common Library\HelseID.Clients.Common.csproj">
       <Project>{ECA95D1F-2836-4326-AF90-F6530DA66CE8}</Project>
-      <Name>HelseID Test Common Library</Name>
+      <Name>HelseID.Clients.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

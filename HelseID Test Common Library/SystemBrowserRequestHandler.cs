@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IdentityModel.OidcClient;
 
-namespace HelseID.Test.WPF.Common
+namespace HelseID.Clients.Common
 {
     public class SystemBrowserRequestHandler: IDisposable
     {

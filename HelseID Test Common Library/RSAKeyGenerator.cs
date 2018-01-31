@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 
-namespace HelseID.Test.WPF.Common
+namespace HelseID.Clients.Common
 {
     /// <summary>
     /// 

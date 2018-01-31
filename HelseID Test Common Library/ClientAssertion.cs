@@ -1,6 +1,4 @@
-﻿using IdentityModel.Client;
-
-namespace HelseID.Test.WPF.Common
+﻿namespace HelseID.Clients.Common
 {
     public class ClientAssertion
     {

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace HelseID.Test.WPF.WebBrowser
+namespace HelseID.Clients.WPF.EmbeddedBrowser
 {
     /// <summary>
     /// Interaction logic for App.xaml

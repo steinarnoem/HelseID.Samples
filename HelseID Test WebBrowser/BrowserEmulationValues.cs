@@ -1,4 +1,4 @@
-﻿namespace HelseID.Test.WPF.WebBrowser
+﻿namespace HelseID.Clients.WPF.EmbeddedBrowser
 {
     internal static class BrowserEmulationValues
     {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace HelseID.Test.WPF.Common
+namespace HelseID.Clients.Common
 {
     public class Scopes : List<string>
     {

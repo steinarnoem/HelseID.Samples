@@ -1,9 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
+using Microsoft.Win32;
 
-namespace HelseID.Test.WPF.WebBrowser
+namespace HelseID.Clients.WPF.EmbeddedBrowser
 {
     internal class RegistryHelper
     {

@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HelseID.Test.WPF.Common
+namespace HelseID.Clients.Common
 {
     public class JwtGenerator
     {

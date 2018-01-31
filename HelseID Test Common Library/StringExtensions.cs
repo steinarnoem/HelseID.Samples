@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HelseID.Test.WPF.Common
+namespace HelseID.Clients.Common
 {
     public static class StringExtensions
     {

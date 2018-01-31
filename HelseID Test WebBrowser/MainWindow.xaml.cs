@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
-using HelseID.Test.WPF.Common.Controls;
-using HelseID.Test.WPF.Common;
-using HelseID.Test.WPF.WebBrowser.EventArgs;
-using HelseID.Test.WPF.WebBrowser.Model;
+using HelseID.Clients.Common;
+using HelseID.Clients.WPF.Controls;
+using HelseID.Clients.WPF.EmbeddedBrowser.EventArgs;
+using HelseID.Clients.WPF.EmbeddedBrowser.Model;
 using IdentityModel.OidcClient;
-using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json.Linq;
 
-namespace HelseID.Test.WPF.WebBrowser
+namespace HelseID.Clients.WPF.EmbeddedBrowser
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -21,7 +19,7 @@ namespace HelseID.Test.WPF.WebBrowser
     {
         private LoginWindow _login;
         private AuthInfo _result;
-        private LoginResult _loginResult;
+        // private LoginResult _loginResult;
         private OidcClientOptions _options;
         private List<string> _configuredScopes;
 
@@ -40,17 +38,17 @@ namespace HelseID.Test.WPF.WebBrowser
                     var rsaPublicKey = RSAKeyGenerator.GetPublicKeyAsXml();
                     RsaPublicKeyTextBox.Text = rsaPublicKey;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     RsaPublicKeyTextBox.Text = "No RSA public key available";
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show(
                     @"The application does not have sufficient priveleges to write to the registry. Try starting again in administrator modus if you would like the applicastion to do the neccessary configurations.");
             }
-        }        
+        }
 
         private void LoginError(object sender, LoginEventArgs e)
         {
@@ -109,7 +107,7 @@ namespace HelseID.Test.WPF.WebBrowser
             {
                 var scopeCheckBox = new CheckBox()
                 {
-                    Content = scope,                    
+                    Content = scope,
                 };
 
                 if (_configuredScopes.Contains(scope))
@@ -132,10 +130,10 @@ namespace HelseID.Test.WPF.WebBrowser
                 ScopesList.Children.Add(scopeCheckBox);
             }
 
-        }        
+        }
 
         private async void CallApi(Uri url)
-        {            
+        {
             var client = new HttpClient();
 
             if (_result == null)
@@ -217,7 +215,7 @@ namespace HelseID.Test.WPF.WebBrowser
             set;
         }
 
-        private async void CallApiButton_Click(object sender, RoutedEventArgs e)
+        private void CallApiButton_Click(object sender, RoutedEventArgs e)
         {
 
             //var queue = new SnackbarMessageQueue(new TimeSpan(0,0,0,20));
@@ -226,7 +224,7 @@ namespace HelseID.Test.WPF.WebBrowser
 
             //await ApiLoadingDialog.ShowDialog(this);
             ShowApiLoadingDialog = true;
-            
+
 
             if (_result == null)
             {
@@ -236,7 +234,7 @@ namespace HelseID.Test.WPF.WebBrowser
 
             var apiWindow = new ApiSettingsWindow();
             var result = apiWindow.ShowDialog();
-            
+
             if (!result.HasValue || !result.Value) return;
 
             var apiUrl = apiWindow.ApiAddress;

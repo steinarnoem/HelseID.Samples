@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 
-namespace HelseID.Test.WPF.Common
+namespace HelseID.Clients.Common
 {
     public static class TokenExtensions
     {

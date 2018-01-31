@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using HelseID.Clients.Common;
 using IdentityModel.OidcClient;
 
-namespace HelseID.Test.WPF.Common.Controls
+namespace HelseID.Clients.WPF.Controls
 {
 
     public class OidcOptionsChangedEventArgs : EventArgs

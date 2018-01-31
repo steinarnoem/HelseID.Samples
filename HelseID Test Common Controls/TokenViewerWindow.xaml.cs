@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 
-namespace HelseID.Test.WPF.Common.Controls
+namespace HelseID.Clients.WPF.Controls
 {
     /// <summary>
     /// Interaction logic for TokenViewer.xaml

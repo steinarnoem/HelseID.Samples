@@ -13,9 +13,6 @@ using Newtonsoft.Json.Linq;
 
 namespace HelseID.Test.WPF
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {        
         private readonly SystemBrowserManager _browserManager;
@@ -23,6 +20,7 @@ namespace HelseID.Test.WPF
         private LoginResult _loginResult;
         private OidcClientOptions _options;
         private List<string> _configuredScopes = new List<string>();
+        private string _preselectedIdP;
 
         public MainWindow()
         {
@@ -48,13 +46,6 @@ namespace HelseID.Test.WPF
 
         private async Task Login()
         {
-            //var options = GetClientConfiguration();
-
-            //if (!NetworkHelper.StsIsAvailable(options.Authority))
-            //{
-            //    MessageBox.Show("Kunne ikke nå adressen:" + options.Authority);
-            //}               
-
             if (_options == null)
             {
 
@@ -90,15 +81,14 @@ namespace HelseID.Test.WPF
         {
             object extraParams = null;
 
-            var discoveryDocument = await GetDiscoveryDocument(client.Options.Authority);
+            var discoveryDocument = await OidcDiscoveryHelper.GetDiscoveryDocument(client.Options.Authority);
 
             Dispatcher.Invoke(() =>
             {
                 if (UseJwtBearerClientAuthentication.IsChecked.HasValue &&
                     UseJwtBearerClientAuthentication.IsChecked.Value)
-                {
-                    extraParams = ClientAssertion.CreateWithRsaKeys(client.Options.ClientId, discoveryDocument, JwtGenerator.SigningMethod.RsaSecurityKey);
-                    //extraParams = new {client_assertion=clientAssertion.Assertion,client_assertion_type=IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer};
+                {                    
+                    extraParams = ClientAssertion.CreateWithRsaKeys(client.Options.ClientId, discoveryDocument.TokenEndpoint, JwtGenerator.SigningMethod.RsaSecurityKey);                    
                 }
                     
             });
@@ -141,26 +131,9 @@ namespace HelseID.Test.WPF
             if (string.IsNullOrEmpty(preselectIdp))
                 return null;
 
-
             return new { acr_values = preselectIdp, prompt = "Login" };
         }
-
-        //public object GetClientAssertionParameters(string clientId, DiscoveryResponse discoDocument)
-        //{            
-        //    var assertion = JwtGenerator.GenerateJwt(clientId, discoDocument.TokenEndpoint);
-        //    //JwtGenerator.ValidateToken(assertion, _options.ClientId);
-
-        //    return new { client_assertion = assertion, client_assertion_type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer };
-        //}
-
-        private async Task<DiscoveryResponse> GetDiscoveryDocument(string authority)
-        {
-            var discoClient = new DiscoveryClient(authority);
-            var discoveryResponse = await discoClient.GetAsync();
-
-            return discoveryResponse;
-        }
-
+        
 
         private void ShowTokenContent(string accessToken, string identityToken)
         {
@@ -170,6 +143,8 @@ namespace HelseID.Test.WPF
             AccessTokenClaimsTextBox.Dispatcher.Invoke(() => { AccessTokenClaimsTextBox.Text = accessTokenAsText; });
             IdentityTokenClaimsTextBox.Dispatcher.Invoke(() => { IdentityTokenClaimsTextBox.Text = idTokenAsText; });
         }
+
+        #region Event Handlers
 
         private void ShowIdTokenRawButton_Click(object sender, RoutedEventArgs e)
         {
@@ -187,6 +162,83 @@ namespace HelseID.Test.WPF
                 MessageBox.Show("There is no Access Token available - try to log in");
         }
 
+        private void LogOutButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Close your browser window to log out ;)");
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateScopesList();
+        }
+
+        private void CallApiButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_loginResult == null)
+            {
+                MessageBox.Show("You need to authenticate before you can call the API");
+                return;
+            }
+
+            var apiWindow = new ApiSettingsWindow();
+            var result = apiWindow.ShowDialog();
+
+            if (!result.HasValue || !result.Value) return;
+
+            var apiUrl = apiWindow.ApiAddress;
+
+            try
+            {
+                var url = new Uri(apiUrl);
+
+                if (!url.IsWellFormedOriginalString())
+                    throw new UriFormatException();
+
+                CallApi(url);
+            }
+            catch (UriFormatException uriFormatException)
+            {
+                MessageBox.Show($"The Url you entered was invalid : {uriFormatException.Message}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw;
+            }
+        }
+
+        private void ConfigSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new OidcClientSettingsWindow(_configuredScopes, _options);
+            settingsWindow.OptionsChanged += (s, updatedOptions) =>
+            {
+                _options = updatedOptions.Options;
+                _configuredScopes = updatedOptions.Scopes;
+                _preselectedIdP = updatedOptions.PreselectedIdP;
+
+
+                UpdateConfigurationView();
+                UpdateScopesList();
+                PreselectIdpLabel.Content = _preselectedIdP.Trim();
+            };
+            var result = settingsWindow.ShowDialog();
+        }
+
+
+        private void GetRsaPublicKeyButton_Click(object sender, RoutedEventArgs e)
+        {
+            var rsaPublicKey = RSAKeyGenerator.CreateNewKey(false);
+            RsaPublicKeyTextBox.Text = rsaPublicKey;
+        }
+
+        private void CopyRsaPublicKey_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(RsaPublicKeyTextBox.Text);
+            RsaPublicKeyTextBox.SelectAll();
+            RsaPublicKeyTextBox.Focus();
+        }
+        #endregion
+
         private static void ShowTokenViewer(string content)
         {
             var view = new TokenViewerWindow { Token = content };
@@ -201,15 +253,6 @@ namespace HelseID.Test.WPF
             AuthoritiesLabel.Content = _options.Authority;
         }        
 
-        private void LogOutButton_Click(object sender, RoutedEventArgs e)
-        {            
-            MessageBox.Show("Close your browser window to log out ;)");
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            UpdateScopesList();
-        }
 
         private void UpdateScopesList()
         {
@@ -241,41 +284,6 @@ namespace HelseID.Test.WPF
                 ScopesList.Children.Add(scopeCheckBox);
             }
 
-        }
-
-        private void CallApiButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_loginResult == null)
-            {
-                MessageBox.Show("You need to authenticate before you can call the API");
-                return;
-            }
-                
-            var apiWindow = new ApiSettingsWindow();
-            var result = apiWindow.ShowDialog();
-
-            if (!result.HasValue || !result.Value) return;
-
-            var apiUrl = apiWindow.ApiAddress;
-
-            try
-            {
-                var url = new Uri(apiUrl);
-
-                if (!url.IsWellFormedOriginalString())
-                    throw new UriFormatException();
-
-                CallApi(url);
-            }
-            catch (UriFormatException uriFormatException)
-            {
-                MessageBox.Show($"The Url you entered was invalid : {uriFormatException.Message}");
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-                throw;
-            }
         }
 
         private async void CallApi(Uri url)
@@ -314,32 +322,6 @@ namespace HelseID.Test.WPF
             }
         }
 
-        private void ConfigSettings_Click(object sender, RoutedEventArgs e)
-        {
-            var settingsWindow = new OidcClientSettingsWindow(_configuredScopes, _options);
-            settingsWindow.OptionsChanged += (s, updatedOptions) =>
-            {
-                _options = updatedOptions.Options;
-                _configuredScopes = updatedOptions.Scopes;
 
-                UpdateConfigurationView();
-                UpdateScopesList();
-            };
-            var result = settingsWindow.ShowDialog();            
-        }
-
-
-        private void GetRsaPublicKeyButton_Click(object sender, RoutedEventArgs e)
-        {
-            var rsaPublicKey = RSAKeyGenerator.CreateNewKey(false);
-            RsaPublicKeyTextBox.Text = rsaPublicKey;
-        }
-
-        private void CopyRsaPublicKey_Click(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetText(RsaPublicKeyTextBox.Text);
-            RsaPublicKeyTextBox.SelectAll();
-            RsaPublicKeyTextBox.Focus();
-        }
     }
 }

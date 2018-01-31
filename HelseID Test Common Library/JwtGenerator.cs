@@ -10,7 +10,7 @@ namespace HelseID.Test.WPF.Common
     public class JwtGenerator
     {
         public enum SigningMethod  {
-            None, X509SecurityKey, RsaSecurityKey
+            None, X509SecurityKey, RsaSecurityKey, X509EnterpriseSecurityKey
         };
 
         public static List<string> ValidAudiences = new List<string> { "https://localhost:44366/connect/token", "https://helseid-sts.utvikling.nhn.no", "https://helseid-sts.test.nhn.no", "https://helseid-sts.utvikling.nhn.no"};
@@ -87,8 +87,7 @@ namespace HelseID.Test.WPF.Common
             return validatedToken;
         }
 
-        private static SigningCredentials GetSigningCredentials(SigningMethod signingMethod,
-            SigningCredentials signingCredentials, string x509Thumbprint)
+        private static SigningCredentials GetSigningCredentials(SigningMethod signingMethod, SigningCredentials signingCredentials, string x509Thumbprint)
         {
             if (signingCredentials != null) return signingCredentials;
 

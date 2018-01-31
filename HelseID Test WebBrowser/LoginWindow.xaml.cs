@@ -70,7 +70,7 @@ namespace HelseID.Test.WPF.WebBrowser
 
                 if (_signingMethod != JwtGenerator.SigningMethod.None)
                 {
-                    var clientAssertion = ClientAssertion.CreateWithRsaKeys(_clientOptions.ClientId, discoveryDocument, _signingMethod);
+                    var clientAssertion = ClientAssertion.CreateWithRsaKeys(_clientOptions.ClientId, discoveryDocument.TokenEndpoint, _signingMethod);
                     extraParams = clientAssertion;
                 }            
 

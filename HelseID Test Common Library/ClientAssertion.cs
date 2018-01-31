@@ -4,16 +4,24 @@ namespace HelseID.Test.WPF.Common
 {
     public class ClientAssertion
     {
-        public static object CreateWithRsaKeys(string clientId, DiscoveryResponse discoDocument, JwtGenerator.SigningMethod signingMethod)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientId">The OIDC/OAuth client id</param>
+        /// <param name="tokenEndpointUrl">The adress to the token endpoint of the STS (AS)</param>
+        /// <param name="signingMethod">Indicate which method you would like to use to sign the token</param>
+        /// <returns>Client assertion (JWT) and client assertion type</returns>
+        public static object CreateWithRsaKeys(string clientId, string tokenEndpointUrl, JwtGenerator.SigningMethod signingMethod)
         {
-            var assertion = JwtGenerator.Generate(clientId, discoDocument.TokenEndpoint, signingMethod);
+            var assertion = JwtGenerator.Generate(clientId, tokenEndpointUrl, signingMethod);
             //JwtGenerator.ValidateToken(assertion, _options.ClientId);
 
             var clientAssertion = new ClientAssertion
             {
-                //Assertion = assertion //new { client_assertion = assertion, client_assertion_type = IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer }
+                Assertion = assertion 
             };
-            return new { client_assertion=assertion,client_assertion_type=IdentityModel.OidcConstants.ClientAssertionTypes.JwtBearer };
+
+            return new { client_assertion = clientAssertion.Assertion,client_assertion_type = clientAssertion.AssertionType}; ;
         }
 
         public string Assertion { get; set; }

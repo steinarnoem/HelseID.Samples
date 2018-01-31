@@ -12,10 +12,13 @@ namespace HelseID.Test.WPF.Common.Controls
         public OidcClientOptions Options { get; set; }
         public List<string> Scopes { get; set; }
 
-        public OidcOptionsChangedEventArgs(OidcClientOptions options, List<string> configuredScopes)
+        public string PreselectedIdP { get; set; }
+
+        public OidcOptionsChangedEventArgs(OidcClientOptions options, List<string> configuredScopes, string preselectIdP)
         {
             Options = options;
             Scopes = configuredScopes;
+            PreselectedIdP = preselectIdP;
         }
     }
 
@@ -178,7 +181,8 @@ namespace HelseID.Test.WPF.Common.Controls
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             _options = GetClientConfiguration();
-            OptionsChanged?.Invoke(this, new OidcOptionsChangedEventArgs(_options, ConfiguredScopes));
+            var preselectIdP = PreselectIdpTextBox.Text;
+            OptionsChanged?.Invoke(this, new OidcOptionsChangedEventArgs(_options, ConfiguredScopes, preselectIdP));
 
             DialogResult = true;
             Close();

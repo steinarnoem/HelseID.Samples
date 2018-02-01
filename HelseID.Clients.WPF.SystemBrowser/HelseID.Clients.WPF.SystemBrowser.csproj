@@ -210,7 +210,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HelseID Test Common Controls\HelseID.Clients.WPF.Controls.csproj">
+    <ProjectReference Include="..\HelseID.Clients.WPF.Controls\HelseID.Clients.WPF.Controls.csproj">
       <Project>{9138EA1E-C1A9-4201-B47D-4064D788A850}</Project>
       <Name>HelseID.Clients.WPF.Controls</Name>
     </ProjectReference>

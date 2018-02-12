@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using HelseID.Clients.Common;
 using HelseID.Clients.WPF.Controls;
-using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json.Linq;
@@ -25,6 +24,16 @@ namespace HelseID.Test.WPF
         public MainWindow()
         {
             InitializeComponent();
+
+            try
+            {
+                var rsaPublicKey = RSAKeyGenerator.GetPublicKeyAsXml();
+                RsaPublicKeyTextBox.Text = rsaPublicKey;
+            }
+            catch (Exception)
+            {
+                RsaPublicKeyTextBox.Text = "No RSA public key available";
+            }
 
             _browserManager = new SystemBrowserManager();
 

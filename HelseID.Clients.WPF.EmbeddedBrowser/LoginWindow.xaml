@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="Login" Height="717.72" Width="845.158" Loaded="Window_Loaded">
     <Grid>
-        <WebBrowser x:Name="webBrowser" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Navigating="WebBrowser_Navigating"/>
+        <WebBrowser x:Name="webBrowser" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>

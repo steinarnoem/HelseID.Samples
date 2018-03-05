@@ -12,7 +12,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="Oidc and OAuth 2.0 Client Settings" Height="450" Width="474" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Loaded="Window_Loaded">
+        Title="Oidc and OAuth 2.0 Client Settings" Height="530" Width="474" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" Loaded="Window_Loaded">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -27,6 +27,8 @@
         <Grid Grid.Row="0" Grid.Column="0" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
                 <RowDefinition Height="36"></RowDefinition>
                 <RowDefinition Height="36"></RowDefinition>
                 <RowDefinition Height="36"></RowDefinition>
@@ -38,31 +40,40 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" />
                 <ColumnDefinition/>
+                <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
 
-            <Label Content="Authority:" HorizontalAlignment="Left" Margin="0" Width="78" Grid.Row="0" Grid.Column="0" />
-            <ComboBox x:Name="AuthoritiesComboBox" Margin="0" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1" ></ComboBox>
+            <Label Content="Preset:" HorizontalAlignment="Left" Margin="0" Width="78" Grid.Row="0" Grid.Column="0" />
+            <ComboBox x:Name="PresetComboBox" Margin="0" VerticalAlignment="Top" DisplayMemberPath="Name" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1" SelectionChanged="PresetComboBox_Selected" ></ComboBox>
+            <Button x:Name="NewButton" Content="New" HorizontalAlignment="Right" VerticalAlignment="Center" Width="73" Margin="0"  Grid.Row="0" Grid.Column="2" Click="NewButton_Click"/>
+            
+            <Label Content="Name:" HorizontalAlignment="Left" Margin="0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"/>
+            <TextBox x:Name="NameTextBox" Margin="0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top"/>
+            <Button x:Name="DeleteButton" Content="Delete" Background="Red" BorderBrush="DarkRed" HorizontalAlignment="Right" VerticalAlignment="Center" Width="73" Margin="0"  Grid.Row="1" Grid.Column="2" Click="DeleteButton_Click"/>
 
-            <Label Content="ClientId:" HorizontalAlignment="Left" Margin="0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"/>
-            <TextBox x:Name="ClientIdTextBox" Margin="0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top"/>
+            <Label Content="Authority:" HorizontalAlignment="Left" Margin="0" Width="78" Grid.Row="2" Grid.Column="0" />
+            <ComboBox x:Name="AuthoritiesComboBox" Margin="0" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Row="2" Grid.Column="1" ></ComboBox>
 
-            <Label Content="Secret:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Grid.Row="2" Grid.Column="0" />
-            <TextBox x:Name="SecretTextBox" Margin="0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top"/>
+            <Label Content="ClientId:" HorizontalAlignment="Left" Margin="0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top"/>
+            <TextBox x:Name="ClientIdTextBox" Margin="0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="3" VerticalAlignment="Top"/>
 
-            <Label Content="RedirectUrl:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0" />
-            <TextBox x:Name="RedirectUrlTextBox" Margin="0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="3" VerticalAlignment="Top" />
+            <Label Content="Secret:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0" />
+            <TextBox x:Name="SecretTextBox" Margin="0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="4" VerticalAlignment="Top"/>
 
-            <Label Grid.Row="4" Grid.Column="0" Content="Scope:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" />
-            <ScrollViewer Grid.Row="4" Grid.Column="1">
+            <Label Content="RedirectUrl:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Grid.Row="5" Grid.Column="0" />
+            <TextBox x:Name="RedirectUrlTextBox" Margin="0" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="5" VerticalAlignment="Top" />
+
+            <Label Grid.Row="6" Grid.Column="0" Content="Scope:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" />
+            <ScrollViewer Grid.Row="6" Grid.Column="1">
                 <StackPanel  x:Name="ScopesList" Orientation="Vertical" CanVerticallyScroll="True"></StackPanel>
             </ScrollViewer>
             
-            <Label Grid.Row="5" Grid.Column="0" Content="IdP:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0" />
-            <TextBox x:Name="PreselectIdpTextBox" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="5"/>
+            <Label Grid.Row="7" Grid.Column="0" Content="IdP:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0" />
+            <TextBox x:Name="PreselectIdpTextBox" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="7"/>
 
-            <CheckBox x:Name="UseADFSCheckBox" Content="Use OIDC in ADFS (Windows Server 2016)" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Margin="0" Grid.Row="6" />
+            <CheckBox x:Name="UseADFSCheckBox" Content="Use OIDC in ADFS (Windows Server 2016)" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Margin="0" Grid.Row="8" />
 
-            <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="0,0,8,0" Grid.Column="1">
+            <StackPanel Orientation="Horizontal" Grid.Row="9" Margin="0,0,8,0" Grid.Column="1">
 
                 <Button x:Name="OkButton" Content="OK" HorizontalAlignment="Center" VerticalAlignment="Center" Width="90" Click="OkButton_Click" Margin="0, 0,10,0"/>
                 <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Center" Width="89" Margin="0" Click="CancelButton_Click"/>

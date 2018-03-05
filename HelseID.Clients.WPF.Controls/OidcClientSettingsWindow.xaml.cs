@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using HelseID.Clients.Common;
+using HelseID.Clients.Common.ClientConfig;
 using IdentityModel.OidcClient;
+using System.Linq;
+using System.Collections.ObjectModel;
+using HelseID.Clients.Common.Clients;
 
 namespace HelseID.Clients.WPF.Controls
 {
-
     public class OidcOptionsChangedEventArgs : EventArgs
     {
-        public OidcClientOptions Options { get; set; }
+        public HelseIdClientOptions Options { get; set; }
         public List<string> Scopes { get; set; }
+        public string Name { get; set; }
 
-        public string PreselectedIdP { get; set; }
-
-        public OidcOptionsChangedEventArgs(OidcClientOptions options, List<string> configuredScopes, string preselectIdP)
+        public OidcOptionsChangedEventArgs(HelseIdClientOptions options, List<string> configuredScopes, string name)
         {
             Options = options;
             Scopes = configuredScopes;
-            PreselectedIdP = preselectIdP;
+            Name = name;
         }
     }
 
@@ -31,43 +32,17 @@ namespace HelseID.Clients.WPF.Controls
         public event EventHandler<OidcOptionsChangedEventArgs> OptionsChanged;
 
         private List<string> ConfiguredScopes { get; set; }
-        private OidcClientOptions _options;
+        private HelseIdClientOptions _options;
+        private ObservableCollection<Setting> Settings;
 
-        public OidcClientSettingsWindow()
+        public OidcClientSettingsWindow(string selected)
         {
             InitializeComponent();
-
             ConfiguredScopes = new List<string>();
-
+            Settings = new ObservableCollection<Setting>(Config.Settings());
+            PresetComboBox.ItemsSource = Settings;
+            PresetComboBox.SelectedItem = Settings.FirstOrDefault(x => x.Name == selected) ?? Settings.FirstOrDefault();
             SetDefaultClientConfiguration();
-            CreateScopesCheckboxes();
-        }
-
-        public OidcClientSettingsWindow(IReadOnlyCollection<string> scopes)
-        {
-            InitializeComponent();
-            ConfiguredScopes = scopes != null ? new List<string>(scopes) : new List<string>();
-
-            SetDefaultClientConfiguration();
-            CreateScopesCheckboxes();
-        }
-
-        public OidcClientSettingsWindow(List<string> scopes, OidcClientOptions options)
-        {
-            InitializeComponent();
-
-            ConfiguredScopes = scopes != null ? new List<string>(scopes) : new List<string>();
-
-            if (options != null)
-            {
-                _options = options;
-                UpdateClientSettingControls();
-            }
-            else
-            {
-                SetDefaultClientConfiguration();
-            }
-
             CreateScopesCheckboxes();
         }
 
@@ -79,12 +54,20 @@ namespace HelseID.Clients.WPF.Controls
         private void SetDefaultClientConfiguration()
         {
             AuthoritiesComboBox.ItemsSource = Authorities.HelseIdAuthorities;
-            ClientIdTextBox.Text = DefaultClientConfigurationValues.DefaultClientId;
-            ConfiguredScopes.Add(DefaultClientConfigurationValues.DefaultScope);
-            SecretTextBox.Text = DefaultClientConfigurationValues.DefaultSecret;
-            RedirectUrlTextBox.Text = SystemBrowserRequestHandler.DefaultUri;
-            AuthoritiesComboBox.SelectedItem = DefaultClientConfigurationValues.DefaultAuthority;
-            
+        }
+
+        private void SetSetting(Setting setting)
+        {
+            SetDefaultClientConfiguration();
+            NameTextBox.Text = setting.Name;
+            ClientIdTextBox.Text = setting.ClientId;
+            ConfiguredScopes = setting.Scopes;
+            SecretTextBox.Text = setting.ClientSecret;
+            RedirectUrlTextBox.Text = setting.RedirectUrl;
+            AuthoritiesComboBox.SelectedItem = setting.Authority;
+            PreselectIdpTextBox.Text = setting.PreselectedIdp;
+
+            CreateScopesCheckboxes();
         }
 
         private void UpdateClientSettingControls()
@@ -100,6 +83,8 @@ namespace HelseID.Clients.WPF.Controls
 
         private void CreateScopesCheckboxes()
         {
+            ScopesList.Children.Clear();
+
             foreach (var scope in Scopes.DefaultScopes)
             {
                 var scopeCheckBox = new CheckBox()
@@ -142,24 +127,45 @@ namespace HelseID.Clients.WPF.Controls
 
                 ScopesList.Children.Add(scopeCheckBox);
             }
-
         }
 
-        public OidcClientOptions GetClientConfiguration()
+        public void UpdateSelected(Setting selectedItem)
+        {
+            if (selectedItem == null)
+                return;
+            var authority = AuthoritiesComboBox.SelectedValue as string;
+            var clientId = ClientIdTextBox.Text.Trim();
+            var scope = string.Join(" ", ConfiguredScopes);
+            var secret = SecretTextBox.Text;
+            var redirectUrl = RedirectUrlTextBox.Text;
+            var preselect = PreselectIdpTextBox.Text;
+
+            selectedItem.Name = NameTextBox.Text;
+            selectedItem.Authority = authority;
+            selectedItem.ClientId = clientId;
+            selectedItem.ClientSecret = secret;
+            selectedItem.Scopes = ConfiguredScopes;
+            selectedItem.RedirectUrl = redirectUrl;
+            selectedItem.PreselectedIdp = preselect;
+        }
+
+        public HelseIdClientOptions GetClientConfiguration()
         {
             var authority = AuthoritiesComboBox.SelectedValue as string;
             var clientId = ClientIdTextBox.Text.Trim();
             var scope = string.Join(" ", ConfiguredScopes);
             var secret = SecretTextBox.Text;
             var redirectUrl = RedirectUrlTextBox.Text;
+            var preselectIdP = PreselectIdpTextBox.Text;
 
-            var options = new OidcClientOptions()
+            var options = new HelseIdClientOptions()
             {
-                Authority = authority.IsNullOrEmpty() ? DefaultClientConfigurationValues.DefaultAuthority : authority,
-                ClientId = clientId.IsNullOrEmpty() ? DefaultClientConfigurationValues.DefaultClientId : clientId,
-                RedirectUri = redirectUrl.IsNullOrEmpty() ? SystemBrowserRequestHandler.DefaultUri : redirectUrl,
-                Scope = scope.IsNullOrEmpty() ? DefaultClientConfigurationValues.DefaultScope : scope,
-                ClientSecret = secret //string.IsNullOrEmpty(secret) ? DefaultClientConfigurationValues.DefaultSecret : secret,
+                Authority = authority,
+                ClientId = clientId,
+                RedirectUri =  redirectUrl,
+                Scope = scope,
+                ClientSecret = secret,
+                PreselectIdp = preselectIdP  
             };
 
             if (UseADFSCheckBox.IsChecked.HasValue && UseADFSCheckBox.IsChecked.Value)
@@ -178,12 +184,15 @@ namespace HelseID.Clients.WPF.Controls
             return options;
         }
 
-
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
+            UpdateSelected(PresetComboBox.SelectedItem as Setting);
+            Config.Save(Settings.ToList());
             _options = GetClientConfiguration();
-            var preselectIdP = PreselectIdpTextBox.Text;
-            OptionsChanged?.Invoke(this, new OidcOptionsChangedEventArgs(_options, ConfiguredScopes, preselectIdP));
+          
+            var name = NameTextBox.Text;
+
+            OptionsChanged?.Invoke(this, new OidcOptionsChangedEventArgs(_options, ConfiguredScopes, name));
 
             DialogResult = true;
             Close();
@@ -195,6 +204,37 @@ namespace HelseID.Clients.WPF.Controls
             Close();
         }
 
+        private void PresetComboBox_Selected(object sender, SelectionChangedEventArgs e)
+        {
+            if(e.RemovedItems.Count > 0)
+                UpdateSelected(e.RemovedItems[0] as Setting);
+            if (e.AddedItems.Count > 0)
+                SetSetting(e.AddedItems[0] as Setting);
+            else if (Settings.Any())
+            {
+                SetSetting(Settings.First());
+            }
+            else
+            {
+                NewButton_Click(null, null);
+            }
+        }
 
+        private void NewButton_Click(object sender, RoutedEventArgs e)
+        {
+            var newSetting = new Setting();
+            Settings.Add(newSetting);
+
+            PresetComboBox.SelectedItem = newSetting;
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selected = Settings.FirstOrDefault(x => x.Name == NameTextBox.Text);
+            if(selected != null)
+                Settings.Remove(selected);
+
+            PresetComboBox.SelectedItem = Settings.First(); 
+        }
     }
 }

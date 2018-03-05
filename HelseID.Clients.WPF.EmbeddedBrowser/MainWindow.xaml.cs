@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using HelseID.Clients.Common;
+using HelseID.Clients.Common.ClientConfig;
+using HelseID.Clients.Common.Clients;
+using HelseID.Clients.Common.Crypto;
+using HelseID.Clients.Common.Extensions;
+using HelseID.Clients.Common.Oidc;
+using HelseID.Clients.Common.X509Certificates;
 using HelseID.Clients.WPF.Controls;
 using HelseID.Clients.WPF.EmbeddedBrowser.EventArgs;
 using HelseID.Clients.WPF.EmbeddedBrowser.Model;
-using IdentityModel.OidcClient;
+using IdentityModel.Client;
 using Newtonsoft.Json.Linq;
+using static HelseID.Clients.Common.Jwt.JwtGenerator;
 
 namespace HelseID.Clients.WPF.EmbeddedBrowser
 {
@@ -19,28 +26,28 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
     {
         private LoginWindow _login;
         private AuthInfo _result;
-        // private LoginResult _loginResult;
-        private OidcClientOptions _options;
+        private string _selected;
+        private string RsaPublicKey;
+        private HelseIdClientOptions _options;
         private List<string> _configuredScopes;
+        private TokenResponse _tokenExchangeResult;
 
         public MainWindow()
         {
             InitializeComponent();
             try
             {
-                var browserManager = new BrowserManager();
-                browserManager.Initialize();
-                //SetDefaultClientConfiguration();
+                BrowserManager.Initialize();
                 ShowApiLoadingDialog = false;
 
                 try
                 {
                     var rsaPublicKey = RSAKeyGenerator.GetPublicKeyAsXml();
-                    RsaPublicKeyTextBox.Text = rsaPublicKey;
+                    RsaPublicKey = rsaPublicKey;
                 }
                 catch (Exception)
                 {
-                    RsaPublicKeyTextBox.Text = "No RSA public key available";
+                    RsaPublicKey = "No RSA public key available";
                 }
             }
             catch (Exception)
@@ -170,9 +177,10 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
 
         private void ConfigSettings_Click(object sender, RoutedEventArgs e)
         {
-            var settingsWindow = new OidcClientSettingsWindow(_configuredScopes, _options);
+            var settingsWindow = new OidcClientSettingsWindow(_selected);
             settingsWindow.OptionsChanged += (s, updatedOptions) =>
             {
+                _selected = updatedOptions.Name;
                 _options = updatedOptions.Options;
                 _configuredScopes = updatedOptions.Scopes;
 
@@ -182,26 +190,39 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
             var result = settingsWindow.ShowDialog();
         }
 
+        private void ThumbprintCheck_Click(object sernder, RoutedEventArgs e)
+        {
+            try
+            {
+                var cert = X509CertificateStore.GetX509CertificateByThumbprint(EnterpriseCertificateTextBox.Text);
+                MessageBox.Show(cert.ToString());
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (_options == null)
             {
-
                 MessageBox.Show("You must create a client configuration before logging in..", "Missing client configuration");
                 return;
             }
 
-            //if (!NetworkHelper.StsIsAvailable(_options.Authority))
-            //{
-            //    MessageBox.Show("Could not reach the address:" + _options.Authority);
-            //}
-            var signingMethod = JwtGenerator.SigningMethod.None;
-            if (UseJwtBearerClientAuthentication.IsChecked.HasValue && UseJwtBearerClientAuthentication.IsChecked.Value)
+            if (UseJwtBearerClientAuthenticationRSA.IsChecked.HasValue && UseJwtBearerClientAuthenticationRSA.IsChecked.Value)
             {
-                signingMethod = JwtGenerator.SigningMethod.RsaSecurityKey;
+                _options.SigningMethod = SigningMethod.RsaSecurityKey;
+            }
+            if (UseJwtBearerClientAuthenticationEntCert.IsChecked.HasValue && UseJwtBearerClientAuthenticationEntCert.IsChecked.Value)
+            {
+                _options.SigningMethod = SigningMethod.X509EnterpriseSecurityKey;
+                _options.CertificateThumbprint = EnterpriseCertificateTextBox.Text;
             }
 
-            _login = new LoginWindow(_options, signingMethod);
+
+            _login = new LoginWindow(_options);
 
             _login.OnLoginSuccess += LoginSuccess;
             _login.OnLoginError += LoginError;
@@ -217,14 +238,7 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
 
         private void CallApiButton_Click(object sender, RoutedEventArgs e)
         {
-
-            //var queue = new SnackbarMessageQueue(new TimeSpan(0,0,0,20));
-            //MySnackbar.MessageQueue = queue;
-            //queue.Enqueue("Wow, easy!");
-
-            //await ApiLoadingDialog.ShowDialog(this);
             ShowApiLoadingDialog = true;
-
 
             if (_result == null)
             {
@@ -279,11 +293,42 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
             else
                 MessageBox.Show("The Id Token is not available - please authenticate again");
         }
+        private void ShowExchangedTokenRawButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_tokenExchangeResult != null && _tokenExchangeResult.AccessToken.IsNotNullOrEmpty())
+                ShowTokenViewer(_tokenExchangeResult.AccessToken);
+            else
+                MessageBox.Show("There is no Exchanged Access Token Token available - try to run token exchange");
+        }
+
+        private async void TokenExchange_Click(object sender, RoutedEventArgs e)
+        {
+            if (UseJwtBearerClientAuthenticationRSA.IsChecked.HasValue &&
+                    UseJwtBearerClientAuthenticationRSA.IsChecked.Value)
+            {
+                _options.SigningMethod = Clients.Common.Jwt.JwtGenerator.SigningMethod.RsaSecurityKey;
+            }
+            if (UseJwtBearerClientAuthenticationEntCert.IsChecked.HasValue &&
+                UseJwtBearerClientAuthenticationEntCert.IsChecked.Value)
+            {
+                _options.SigningMethod = Clients.Common.Jwt.JwtGenerator.SigningMethod.X509EnterpriseSecurityKey;
+                _options.CertificateThumbprint = EnterpriseCertificateTextBox.Text;
+            }
+
+            _options.Scope = "nhn/helseid.test.api.fullframework";
+            var client = new HelseIdClient(_options);
+            var response = await client.TokenExchange(_result.AccessToken);
+
+            _tokenExchangeResult = response;
+            var tokenAsText = response.AccessToken.DecodeToken();
+
+            ExchangeTokenClaimsTextBox.Dispatcher.Invoke(() => { ExchangeTokenClaimsTextBox.Text = tokenAsText; }); 
+        }
 
         private void GetRsaPublicKeyButton_Click(object sender, RoutedEventArgs e)
         {
             var rsaPublicKey = RSAKeyGenerator.CreateNewKey(false);
-            RsaPublicKeyTextBox.Text = rsaPublicKey;
+            RsaPublicKey = rsaPublicKey;
         }
 
         private static void ShowTokenViewer(string content)
@@ -294,9 +339,7 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
 
         private void CopyRsaPublicKey_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(RsaPublicKeyTextBox.Text);
-            RsaPublicKeyTextBox.SelectAll();
-            RsaPublicKeyTextBox.Focus();
+            Clipboard.SetText(RsaPublicKey);
         }
     }
 }

@@ -160,6 +160,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BrowserEmulationValues.cs" />
+    <Compile Include="EmbeddedBrowser.cs" />
     <Compile Include="EventArgs\LoginEventArgs.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>

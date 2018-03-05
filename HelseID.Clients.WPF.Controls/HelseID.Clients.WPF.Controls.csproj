@@ -177,6 +177,7 @@
     <Compile Include="OidcClientSettingsWindow.xaml.cs">
       <DependentUpon>OidcClientSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="SpinnerPiston.xaml.cs">
       <DependentUpon>SpinnerPiston.xaml</DependentUpon>
     </Compile>

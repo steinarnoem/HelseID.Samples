@@ -11,8 +11,7 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}"        
-        xmlns:local="clr-namespace:HelseID.Test.WPF"
+        FontFamily="{DynamicResource MaterialDesignFont}"     
         mc:Ignorable="d"
         Title="HelseID Test - Configuration of client using default browser" 
         Height="784" 
@@ -74,7 +73,9 @@
         </materialDesign:Card>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
-            <CheckBox x:Name="UseJwtBearerClientAuthentication" Margin="32,10,32,10" Content="Use Jwt bearer client authentication"></CheckBox>
+            <RadioButton GroupName="Bearer" x:Name="UseJwtBearerClientAuthenticationRSA" Margin="32,0,32,5" Content="Use Jwt bearer client authentication with RSA"></RadioButton>
+            <RadioButton GroupName="Bearer" x:Name="UseJwtBearerClientAuthenticationEntCert" Margin="32,0,32,5" Content="Use Jwt bearer client authentication with EntCert"></RadioButton>
+            <RadioButton GroupName="Bearer" x:Name="UseClientSecret" Margin="32,0,32,5" Content="Use client secret" IsChecked="true"></RadioButton>
             <StackPanel Orientation="Horizontal" Margin="32,0,0,0">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="LoginButton" Content="Log in" HorizontalAlignment="Center" VerticalAlignment="Center"  Click="Button_Click" Margin="0"/>
@@ -112,19 +113,36 @@
             <StackPanel Orientation="Vertical">
                 <Label Content="Access Token" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
                 <TextBox x:Name="AccessTokenClaimsTextBox" Height="100" TextWrapping="WrapWithOverflow" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
-                <Button x:Name="ShowAccessTokenRawButton" Content="Show token" Margin="0,5,0,0" HorizontalAlignment="Center" Click="ShowAccessTokenRawButton_Click" />
+                  <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="ShowAccessTokenRawButton" Content="Show token" Margin="5,5,5,0" HorizontalAlignment="Center" Click="ShowAccessTokenRawButton_Click" />
+                        <Button x:Name="TokenExchangeButton" Content="Exchange token" Margin="5,5,5,0" HorizontalAlignment="Center" Click="TokenExchange_Click" />
+                  </StackPanel>
             </StackPanel>
         </materialDesign:Card>
-
-        <materialDesign:Card Grid.Row="2" Grid.Column="2" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+        <materialDesign:Card Grid.Row="1" Grid.Column="1" Padding="32,5,16,2" Margin="16,0,16,0" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Vertical">
+                <Label Content="Enterprise certificate" Margin="-2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                <TextBox x:Name="EnterpriseCertificateTextBox" Margin="2" Height="25" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto" Text="d7e313c62fdd723d6e306e43e22c98ac5fb91d47" />
+                <Button x:Name="CheckThumbprint" Content="Check" HorizontalAlignment="Right" Click="ThumbprintCheck_Click" />
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card Grid.Row="1" Grid.Column="2"  Padding="32,5,16,22" Margin="16,0,16,0" VerticalAlignment="Bottom">
             <StackPanel Orientation="Vertical">
                 <Label Content="RSA Public Key" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
-                <TextBox x:Name="RsaPublicKeyTextBox" Height="100" TextWrapping="WrapWithOverflow" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Name="GetRsaPublicKeyButton" Content="Create new RSA Key" Margin="0,5,0,0" HorizontalAlignment="Center" Click="GetRsaPublicKeyButton_Click" />
                     <Button x:Name="CopyRsaPublicKeyButton" Content="Copy" Margin="5,5,0,0" HorizontalAlignment="Center" Click="CopyRsaPublicKey_Click" />
                 </StackPanel>
                     
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card Grid.Row="2" Grid.Column="2" Padding="32,5,32,32" Margin="16,0,16,16" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Vertical">
+                <Label Content="Exchanged Token" Margin="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="20"/>
+                <TextBox x:Name="ExchangeTokenClaimsTextBox" Height="100" TextWrapping="WrapWithOverflow" xml:space="preserve" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
+                  <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="ShowExchangeTokenRawButton" Content="Show token" Margin="5,5,5,0" HorizontalAlignment="Center" Click="ShowExchangedTokenRawButton_Click" />
+                  </StackPanel>
             </StackPanel>
         </materialDesign:Card>
     </Grid>

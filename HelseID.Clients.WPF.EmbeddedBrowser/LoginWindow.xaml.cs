@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Windows.Navigation;
 using HelseID.Clients.Common;
+using HelseID.Clients.Common.Clients;
+using HelseID.Clients.Common.Extensions;
+using HelseID.Clients.Common.Jwt;
+using HelseID.Clients.Common.Oidc;
 using HelseID.Clients.WPF.EmbeddedBrowser.EventArgs;
 using HelseID.Clients.WPF.EmbeddedBrowser.Model;
+using IdentityModel;
 using IdentityModel.OidcClient;
 using mshtml;
 
@@ -17,12 +23,7 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
     /// Interaction logic for LoginWindow.xaml
     /// </summary>
     public partial class LoginWindow : Window
-    {
-        private OidcClient _client;
-
-        private readonly OidcClientOptions _clientOptions;
-        private readonly JwtGenerator.SigningMethod _signingMethod;
-        private AuthorizeState _state;
+    {        private readonly HelseIdClientOptions _clientOptions;
 
         public event LoginEventHandler OnLoginSuccess;
         public event LoginEventHandler OnLoginError;
@@ -31,50 +32,20 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
             InitializeComponent();
         }
 
-        public LoginWindow(OidcClientOptions options, JwtGenerator.SigningMethod signingMethod)
+        public LoginWindow(HelseIdClientOptions options)
         {
             InitializeComponent();
-            _clientOptions = options;
-            _signingMethod = signingMethod;
+            _clientOptions = options; 
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _client = new OidcClient(_clientOptions);
-            _state = await _client.PrepareLoginAsync();
+            var browser = new EmbeddedBrowser(webBrowser, _clientOptions.RedirectUri);
+            _clientOptions.Browser = browser;
 
-            webBrowser.Source = new Uri(_state.StartUrl);
-        }
+            var client = new HelseIdClient(_clientOptions);
 
-        private async void WebBrowser_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
-        {
-            if (CheckIfErrorOccurredInHelseId(e))
-            {
-                HandleErrorInHelseId(e);                
-                return;
-            }
-
-            var uri = e.Uri.ToString();
-            if (uri != _clientOptions.RedirectUri) return;
-            
-            await HandleLogin(e);
-        }
-
-        private async Task HandleLogin(NavigatingCancelEventArgs e)
-        {
-            var response = new WebBrowserDocument((IHTMLDocument3)webBrowser.Document);
-
-            object extraParams = null;
-
-            var discoveryDocument = await OidcDiscoveryHelper.GetDiscoveryDocument(_clientOptions.Authority);
-
-                if (_signingMethod != JwtGenerator.SigningMethod.None)
-                {
-                    var clientAssertion = ClientAssertion.CreateWithRsaKeys(_clientOptions.ClientId, discoveryDocument.TokenEndpoint, _signingMethod);
-                    extraParams = clientAssertion;
-                }            
-
-            var result = await _client.ProcessResponseAsync(response.Data, _state, extraParams);
+            var result = await client.Login();
 
             if (result.IsError)
             {
@@ -94,28 +65,10 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
                     Error = result.Error
                 });
             }
-
-            e.Cancel = true;
         }
 
-        private static bool CheckIfErrorOccurredInHelseId(NavigatingCancelEventArgs e)
-        {
-            var error = HttpUtility.ParseQueryString(e.Uri.Query).Get("errorId");
 
-            return !error.IsNullOrEmpty();
-        }
 
-        private void HandleErrorInHelseId(NavigatingCancelEventArgs e)
-        {
-            var error = HttpUtility.ParseQueryString(e.Uri.Query).Get("errorId");
-            OnLoginError?.Invoke(this, new LoginEventArgs()
-            {
-                IsError = true,
-                Error = error
-            });
-
-            e.Cancel = true;
-        }
-
+    
     }
 }

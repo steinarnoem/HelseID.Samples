@@ -9,7 +9,7 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
                    
         }
 
-        public void Initialize()
+        public static void Initialize()
         {
             try
             {

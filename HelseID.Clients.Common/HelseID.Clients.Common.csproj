@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientConfig\Authorities.cs" />
+    <Compile Include="Clients\HelseIdClient.cs" />
     <Compile Include="Clients\HelseIdClientOptions.cs" />
     <Compile Include="Extensions\JwtSecurityTokenExtensions.cs" />
     <Compile Include="Extensions\RSAKeyExtensions.cs" />

@@ -154,17 +154,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientConfig\Authorities.cs" />
-    <Compile Include="Clients\HelseIdClient.cs" />
-    <Compile Include="Clients\HelseIdClientOptions.cs" />
-    <Compile Include="Extensions\JwtSecurityTokenExtensions.cs" />
-    <Compile Include="Extensions\RSAKeyExtensions.cs" />
-    <Compile Include="Oidc\ClientAssertion.cs" />
-    <Compile Include="Oidc\OidcDiscoveryHelper.cs" />
-    <Compile Include="SystemBrowser\Browser.cs" />
-    <Compile Include="SystemBrowser\BrowserRequestHandler.cs" />
-    <Compile Include="SystemBrowser\SystemBrowser.cs" />
-    <Compile Include="Jwt\JwtGenerator.cs" />
-    <Compile Include="Crypto\RSAKeyGenerator.cs" />
     <Compile Include="ClientConfig\DefaultClientConfigurationValues.cs" />
     <Compile Include="Network\NetworkHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

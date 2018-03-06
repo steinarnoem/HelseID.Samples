@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using HelseID.Clients.Common.ClientConfig;
+using HelseID.Common.ClientConfig;
 using IdentityModel.OidcClient;
 using System.Linq;
 using System.Collections.ObjectModel;
-using HelseID.Clients.Common.Clients;
+using HelseID.Common.Clients;
 
 namespace HelseID.Clients.WPF.Controls
 {

@@ -4,18 +4,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using HelseID.Clients.Common.ClientConfig;
-using HelseID.Clients.Common.Crypto;
-using HelseID.Clients.Common.Extensions;
-using HelseID.Clients.Common.Oidc;
-using HelseID.Clients.Common.Browser;
-using HelseID.Clients.Common.X509Certificates;
+using HelseID.Common.ClientConfig;
+using HelseID.Common.Crypto;
+using HelseID.Common.Extensions;
+using HelseID.Common.Certificates;
 using HelseID.Clients.WPF.Controls;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json.Linq;
-using HelseID.Clients.Common.Clients;
+using HelseID.Common.Clients;
 
 namespace HelseID.Test.WPF
 {
@@ -26,7 +24,6 @@ namespace HelseID.Test.WPF
         private string RsaPublicKey;
         private HelseIdClientOptions _options;
         private List<string> _configuredScopes = new List<string>();
-        private string _preselectedIdP;
         private TokenResponse _tokenExchangeResult;
 
         public MainWindow()
@@ -72,12 +69,12 @@ namespace HelseID.Test.WPF
                     if (UseJwtBearerClientAuthenticationRSA.IsChecked.HasValue &&
                         UseJwtBearerClientAuthenticationRSA.IsChecked.Value)
                     {
-                        _options.SigningMethod = Clients.Common.Jwt.JwtGenerator.SigningMethod.RsaSecurityKey;
+                        _options.SigningMethod = Common.Jwt.JwtGenerator.SigningMethod.RsaSecurityKey;
                     }
                     if (UseJwtBearerClientAuthenticationEntCert.IsChecked.HasValue &&
                       UseJwtBearerClientAuthenticationEntCert.IsChecked.Value)
                     {
-                        _options.SigningMethod = Clients.Common.Jwt.JwtGenerator.SigningMethod.X509EnterpriseSecurityKey;
+                        _options.SigningMethod = Common.Jwt.JwtGenerator.SigningMethod.X509EnterpriseSecurityKey;
                         _options.CertificateThumbprint = EnterpriseCertificateTextBox.Text;
                     }
                 });
@@ -169,12 +166,12 @@ namespace HelseID.Test.WPF
             if (UseJwtBearerClientAuthenticationRSA.IsChecked.HasValue &&
                    UseJwtBearerClientAuthenticationRSA.IsChecked.Value)
             {
-                _options.SigningMethod = Clients.Common.Jwt.JwtGenerator.SigningMethod.RsaSecurityKey;
+                _options.SigningMethod = Common.Jwt.JwtGenerator.SigningMethod.RsaSecurityKey;
             }
             if (UseJwtBearerClientAuthenticationEntCert.IsChecked.HasValue &&
               UseJwtBearerClientAuthenticationEntCert.IsChecked.Value)
             {
-                _options.SigningMethod = Clients.Common.Jwt.JwtGenerator.SigningMethod.X509EnterpriseSecurityKey;
+                _options.SigningMethod = Common.Jwt.JwtGenerator.SigningMethod.X509EnterpriseSecurityKey;
                 _options.CertificateThumbprint = EnterpriseCertificateTextBox.Text;
             }
 
@@ -192,7 +189,7 @@ namespace HelseID.Test.WPF
         {
             try
             {
-                var cert = X509CertificateStore.GetX509CertificateByThumbprint(EnterpriseCertificateTextBox.Text);
+                var cert = CertificateStore.GetCertificateByThumbprint(EnterpriseCertificateTextBox.Text);
                 MessageBox.Show(cert.ToString());
             }
             catch (Exception ex)

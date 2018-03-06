@@ -1,4 +1,4 @@
-﻿namespace HelseID.Clients.Common.ClientConfig
+﻿namespace HelseID.Common.ClientConfig
 {
     public class DefaultClientConfigurationValues
     {

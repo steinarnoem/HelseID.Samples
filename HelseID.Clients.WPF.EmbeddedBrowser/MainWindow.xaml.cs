@@ -4,18 +4,18 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using HelseID.Clients.Common.ClientConfig;
-using HelseID.Clients.Common.Clients;
-using HelseID.Clients.Common.Crypto;
-using HelseID.Clients.Common.Extensions;
-using HelseID.Clients.Common.Oidc;
-using HelseID.Clients.Common.X509Certificates;
+using HelseID.Common.ClientConfig;
+using HelseID.Common.Clients;
+using HelseID.Common.Crypto;
+using HelseID.Common.Extensions;
+using HelseID.Common.Oidc;
+using HelseID.Common.Certificates;
 using HelseID.Clients.WPF.Controls;
 using HelseID.Clients.WPF.EmbeddedBrowser.EventArgs;
 using HelseID.Clients.WPF.EmbeddedBrowser.Model;
 using IdentityModel.Client;
 using Newtonsoft.Json.Linq;
-using static HelseID.Clients.Common.Jwt.JwtGenerator;
+using static HelseID.Common.Jwt.JwtGenerator;
 
 namespace HelseID.Clients.WPF.EmbeddedBrowser
 {
@@ -194,7 +194,7 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
         {
             try
             {
-                var cert = X509CertificateStore.GetX509CertificateByThumbprint(EnterpriseCertificateTextBox.Text);
+                var cert = CertificateStore.GetCertificateByThumbprint(EnterpriseCertificateTextBox.Text);
                 MessageBox.Show(cert.ToString());
             }
             catch(Exception ex)
@@ -306,12 +306,12 @@ namespace HelseID.Clients.WPF.EmbeddedBrowser
             if (UseJwtBearerClientAuthenticationRSA.IsChecked.HasValue &&
                     UseJwtBearerClientAuthenticationRSA.IsChecked.Value)
             {
-                _options.SigningMethod = Clients.Common.Jwt.JwtGenerator.SigningMethod.RsaSecurityKey;
+                _options.SigningMethod = SigningMethod.RsaSecurityKey;
             }
             if (UseJwtBearerClientAuthenticationEntCert.IsChecked.HasValue &&
                 UseJwtBearerClientAuthenticationEntCert.IsChecked.Value)
             {
-                _options.SigningMethod = Clients.Common.Jwt.JwtGenerator.SigningMethod.X509EnterpriseSecurityKey;
+                _options.SigningMethod = SigningMethod.X509EnterpriseSecurityKey;
                 _options.CertificateThumbprint = EnterpriseCertificateTextBox.Text;
             }
 

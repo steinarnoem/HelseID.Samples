@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using HelseID.Clients.HIDEnabler.Models;
+using HelseID.Models;
+using HelseID.Models.KJ;
 using Newtonsoft.Json;
 
 namespace HelseID.Clients.HIDEnabler.Services
@@ -36,7 +37,7 @@ namespace HelseID.Clients.HIDEnabler.Services
         {
             var httpClient = GetHttpClient(accessToken);
 
-            var vm = new KjOrgNrViewModel
+            var vm = new OrgNrViewModel
             {
                 ClientId = clientId,
                 Orgnr = orgNumber

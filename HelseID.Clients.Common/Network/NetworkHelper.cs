@@ -2,7 +2,7 @@
 using System.Net;
 using System.Windows.Forms;
 
-namespace HelseID.Clients.Common.Network
+namespace HelseID.Common.Network
 {
     public class NetworkHelper
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using HelseID.Clients.Common.Oidc;
-using HelseID.Clients.Common.X509Certificates;
+using HelseID.Common.Oidc;
+using HelseID.Common.X509Certificates;
 using IdentityModel.OidcClient;
 using Microsoft.Extensions.Logging;
 

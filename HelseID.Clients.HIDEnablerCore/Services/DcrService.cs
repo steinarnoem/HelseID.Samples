@@ -1,21 +1,21 @@
-﻿using HelseID.Clients.Common.Crypto;
-using HelseID.Clients.HIDEnabler.Models;
-using Newtonsoft.Json;
+﻿using HelseID.Common.Clients;
+using HelseID.Common.Crypto;
+using HelseID.Models;
+using HelseID.Models.DCR;
+using HelseID.Models.DCR.Client;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HelseID.Clients.HIDEnabler.Services
 {
-    internal class DcrService
+    public class DcrService
     {
-        private readonly Settings _settings;
+        private DcrClient _client;
 
         public DcrService(Settings settings)
         {
-            _settings = settings;
+            _client = new DcrClient(settings.DcrApi);
         }
 
         public async Task<ClientResponse> CreateClient(string accessToken, string grantType, string redirectUri, string logoutUri, string[] allowedScopes)
@@ -32,7 +32,7 @@ namespace HelseID.Clients.HIDEnabler.Services
                 ClientName = "Dcr created client" + Guid.NewGuid(),
                 Secrets = new[] {
                 new Secret{
-                    Type = "private_key_jwt:RsaPrivateKeyJwtSecret",
+                    Type = SecretTypes.RsaPrivateKey,
                     Value = RSAKeyGenerator.CreateNewKey(false)
                     }
                 },
@@ -44,36 +44,8 @@ namespace HelseID.Clients.HIDEnabler.Services
                 AllowedScopes = allowedScopes
             };
 
-            var client = await StoreClient(clientRequest, accessToken);
-
-            return client;
-        }
-
-        private async Task<ClientResponse> StoreClient(ClientRequest request, string token)
-        {
-            var httpClient = GetHttpClient(token);
-
-            var requestAsJson = JsonConvert.SerializeObject(request);
-            var content = new StringContent(requestAsJson, Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync("api/connect/client/register", content);
-
-            var responseAsJson = await response.Content.ReadAsStringAsync();
-            var client = JsonConvert.DeserializeObject<ClientResponse>(responseAsJson);
-
-            return client;
-        }
-
-        private HttpClient GetHttpClient(string token)
-        {
-            var baseAddress = _settings.DcrApi;
-
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri(baseAddress)
-            };
-
-            client.SetBearerToken(token);
-            return client;
+            _client.SetBearerToken(accessToken);
+            return await _client.StoreClient(clientRequest);
         }
     }
 }

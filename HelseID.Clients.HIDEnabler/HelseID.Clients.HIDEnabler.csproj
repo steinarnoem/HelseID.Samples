@@ -224,6 +224,10 @@
       <Project>{ECA95D1F-2836-4326-AF90-F6530DA66CE8}</Project>
       <Name>HelseID.Clients.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HelseId.Common\HelseId.Common.csproj">
+      <Project>{F27F6E33-1BBF-43B6-A9CE-80005DF9A7CA}</Project>
+      <Name>HelseId.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

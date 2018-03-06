@@ -1,5 +1,5 @@
-﻿using HelseID.Clients.Common.Clients;
-using HelseID.Clients.HIDEnabler.Models;
+﻿using HelseID.Common.Clients;
+using HelseID.Models;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using System.Threading.Tasks;
@@ -46,12 +46,11 @@ namespace HelseID.Clients.HIDEnabler.Services
                 FilterClaims = false,
                 Flow = OidcClientOptions.AuthenticationFlow.AuthorizationCode,
                 ResponseMode = OidcClientOptions.AuthorizeResponseMode.Redirect,
-                CertificateThumbprint = _settings.Thumbprint,
                 SigningMethod = Common.Jwt.JwtGenerator.SigningMethod.RsaSecurityKey
             };
-            var c = new HelseIdClient(options);
+            var client = new HelseIdClient(options);
 
-            var result = await c.ClientCredentialsSignIn();
+            var result = await client.ClientCredentialsSignIn();
 
             return result;
         }
@@ -70,9 +69,10 @@ namespace HelseID.Clients.HIDEnabler.Services
                 SigningMethod = Common.Jwt.JwtGenerator.SigningMethod.RsaSecurityKey
             };
 
-            var oidcClient = new HelseIdClient(options);
+            var client = new HelseIdClient(options);
 
-            var result = await oidcClient.Login();
+            var result = await client.Login();
+
             return result;
         }
     }

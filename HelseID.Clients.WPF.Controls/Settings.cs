@@ -1,4 +1,4 @@
-﻿using HelseID.Clients.Common.ClientConfig;
+﻿using HelseID.Common.ClientConfig;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

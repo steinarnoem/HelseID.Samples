@@ -1,4 +1,4 @@
-﻿using HelseID.Clients.Common.Browser;
+﻿using HelseID.Common.Browser;
 using System;
 using System.Windows.Controls;
 

@@ -1,5 +1,4 @@
 ﻿
-using HelseID.Clients.HIDEnabler.Models;
 using HelseID.Clients.HIDEnabler.Services;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -7,9 +6,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using HelseID.Clients.Common.Extensions;
+using HelseID.Common.Extensions;
+using HelseID.Models;
+using HelseID.Models.KJ;
 
-namespace ConsoleClientWithBrowser
+namespace HelseID.Clients.HIDEnabler
 {
     public class Program
     {
@@ -28,8 +29,7 @@ namespace ConsoleClientWithBrowser
             Console.WriteLine("+-----------------------+");
             Console.WriteLine("");
 
-
-            Console.WriteLine("Signing in with enterprice certificate");
+            Console.WriteLine("Signing in with enterprise certificate");
             var accessToken = await signinService.SignIn();
 
             Console.WriteLine("AccessToken: ");
@@ -64,7 +64,6 @@ namespace ConsoleClientWithBrowser
             Console.Clear();
             Console.WriteLine("Signing in with dcr client");
             //Try to log in with the new configuration
-            //var loginResponse = await signinService.RsaSignIn(clientId, "nhn/kj");
             var loginResponse = await signinService.RsaSignInWithAuthCode(clientId, settings.Scopes);
 
             Console.WriteLine("Signin complete. Recieved access token:");

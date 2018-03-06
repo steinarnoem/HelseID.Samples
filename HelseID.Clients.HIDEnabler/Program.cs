@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using HelseID.Common.Extensions;
-using HelseID.Models;
 using HelseID.Models.KJ;
 
 namespace HelseID.Clients.HIDEnabler

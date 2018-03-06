@@ -1,4 +1,4 @@
-﻿namespace HelseID.Models
+﻿namespace HelseID.Clients.HIDEnabler
 {
     public class Settings
     {

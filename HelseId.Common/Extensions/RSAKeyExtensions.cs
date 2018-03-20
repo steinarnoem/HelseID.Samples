@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace HelseId.Common.Extensions
+namespace HelseID.Common.Extensions
 {
     public static class RSAKeyExtensions
     {

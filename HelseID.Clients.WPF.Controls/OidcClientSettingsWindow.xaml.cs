@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using HelseID.Common.ClientConfig;
+using HelseID.Common.Extensions;
 using IdentityModel.OidcClient;
 using System.Linq;
 using System.Collections.ObjectModel;
@@ -135,7 +136,7 @@ namespace HelseID.Clients.WPF.Controls
                 return;
             var authority = AuthoritiesComboBox.SelectedValue as string;
             var clientId = ClientIdTextBox.Text.Trim();
-            var scope = string.Join(" ", ConfiguredScopes);
+            var scope = ConfiguredScopes.ToSpaceSeparatedList();
             var secret = SecretTextBox.Text;
             var redirectUrl = RedirectUrlTextBox.Text;
             var preselect = PreselectIdpTextBox.Text;
@@ -153,7 +154,7 @@ namespace HelseID.Clients.WPF.Controls
         {
             var authority = AuthoritiesComboBox.SelectedValue as string;
             var clientId = ClientIdTextBox.Text.Trim();
-            var scope = string.Join(" ", ConfiguredScopes);
+            var scope = ConfiguredScopes.ToSpaceSeparatedList();
             var secret = SecretTextBox.Text;
             var redirectUrl = RedirectUrlTextBox.Text;
             var preselectIdP = PreselectIdpTextBox.Text;

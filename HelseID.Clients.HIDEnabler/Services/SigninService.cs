@@ -21,7 +21,7 @@ namespace HelseID.Clients.HIDEnabler.Services
                 Authority = _settings.Authority,
                 ClientId = _settings.ClientId,
                 RedirectUri = _settings.RedirectUri,
-                Scope = "openid profile helseid://scopes/client/dcr nhn/kj",
+                Scope = "openid profile helseid://scopes/client/dcr https://ehelse.no/kjernejournal/nokkeladmin_api",
                 FilterClaims = false,
                 Flow = OidcClientOptions.AuthenticationFlow.AuthorizationCode,
                 ResponseMode = OidcClientOptions.AuthorizeResponseMode.Redirect,

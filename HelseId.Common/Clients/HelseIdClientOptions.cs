@@ -58,14 +58,15 @@ namespace HelseID.Common.Clients
                 {
                     throw new ArgumentNullException("RedirectUri");
                 }
-                if (string.IsNullOrEmpty(Scope))
-                {
-                    throw new ArgumentNullException("Scope");
-                }
-                if (!Scope.Contains("openid"))
-                {
-                    throw new ArgumentException("Scope must include openid", nameof(Scope));
-                }
+                // Not true if all we want to do is call for a refresh token..
+                //if (string.IsNullOrEmpty(Scope))
+                //{
+                //    throw new ArgumentNullException("Scope");
+                //}
+                //if (!Scope.Contains("openid"))
+                //{
+                //    throw new ArgumentException("Scope must include openid", nameof(Scope));
+                //}
             }
             catch
             {

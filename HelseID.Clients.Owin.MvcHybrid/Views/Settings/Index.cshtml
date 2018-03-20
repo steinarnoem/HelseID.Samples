@@ -1,0 +1,171 @@
+﻿@model HelseID.Clients.Owin.MvcHybrid.Settings
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Settings</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+     <div class="row">
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <h3 class="panel-title">Klient konfigurasjon</h3>
+                <div>Her setter du opp ønsket klient konfigurasjon.</div>
+            </div>
+            <div class="panel-body">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ClientId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ClientId, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ClientSecret, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ClientSecret, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ClientSecret, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Authority, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.Authority, Model.Authorities, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Authority, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RedirectUri, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.RedirectUri, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.RedirectUri, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PostLogoutRedirectUri, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PostLogoutRedirectUri, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PostLogoutRedirectUri, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResponseType, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ResponseType, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ResponseType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Scope, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Scope, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Scope, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SigningMethod, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.SigningMethod, Model.SigningMethods, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SigningMethod, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CertificateThumbprint, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CertificateThumbprint, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CertificateThumbprint, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RsaKey, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DisplayFor(model => model.RsaKey, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdentityProvider">Forhåndsvalgt identitetstilbyder</label>
+                <br />
+                @Html.DropDownListFor(model => model.IdentityProvider, Model.IdentityProviders, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IdentityProvider, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+
+                <div class="checkbox">
+                    @Html.CheckBoxFor(model => model.OnlyLevel4, new { htmlAttributes = new { @class = "form-control" } })
+                    <label>
+                        Bare nivå 4 hos ID-porten
+                    </label>
+                </div>
+                <div class="checkbox">
+                    @Html.CheckBoxFor(model => model.ForceLogin, new { htmlAttributes = new { @class = "form-control" } })
+                    <label>
+                        Deaktiver Single Signon (vis alltid innloggingsbilde i IDP)
+                    </label>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Test IDP</h3>
+                    <div>Dette brukes bare dersom du velger å logge inn i Test IDP.</div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="TestPid">Fødselnummer du ønsker å bli autentisert som</label>
+                        <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" aria-hidden="true" data-placement="right"
+                              title="Dersom du ikke oppgir et fødselnummer her, vil du kunne skrive inn dette når du sendes til Test IDP.">
+                        </span>
+                        @Html.EditorFor(model => model.TestPid, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TestPid, "", new { @class = "text-danger" })
+                        <br />
+
+                        <label for="TestPid">Sikkerhetsnivå du ønsker å bli autentisert med</label>
+                        <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" aria-hidden="true" data-placement="right"
+                              title="Dersom du ikke oppgir et fødselnummer over, vil du kunne velge sikkerhetsnivå når du sendes til Test IDP.">
+                        </span>
+                        <br />
+                        @Html.DropDownListFor(model => model.TestSecurityLevel, Model.SecurityLevels, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TestSecurityLevel, "", new { @class = "text-danger" })
+                        <br />
+
+                        <label for="TestHprNumber">HPR-nummer som skal returneres</label>
+                        <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" aria-hidden="true" data-placement="right"
+                              title="Dersom du ikke oppgir et HPR-nummer, vil det gjøres et normalt oppslag mot HPR for fødselnummeret.">
+                        </span>
+                        <br />
+                        @Html.EditorFor(model => model.TestHprNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TestHprNumber, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+         </div>
+
+        <div class="row form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    }
+

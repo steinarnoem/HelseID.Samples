@@ -1,0 +1,135 @@
+﻿@model HelseID.Clients.Core.MvcHybrid.Settings
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<h4>Settings</h4>
+<hr />
+<div class="row">
+
+    <form asp-action="Index">
+        <div class="row">
+            <div class="col-md-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Klient konfigurasjon</h3>
+                        <div>Her setter du opp ønsket klient konfigurasjon.</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label asp-for="Authority" class="control-label"></label>
+                            <select asp-for="Authority" asp-items="Model.Authorities" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ClientId" class="control-label"></label>
+                            <input asp-for="ClientId" class="form-control" />
+                            <span asp-validation-for="ClientId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ClientSecret" class="control-label"></label>
+                            <input asp-for="ClientSecret" class="form-control" />
+                            <span asp-validation-for="ClientSecret" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RedirectUri" class="control-label"></label>
+                            <input asp-for="RedirectUri" class="form-control" />
+                            <span asp-validation-for="RedirectUri" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PostLogoutRedirectUri" class="control-label"></label>
+                            <input asp-for="PostLogoutRedirectUri" class="form-control" />
+                            <span asp-validation-for="PostLogoutRedirectUri" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ResponseType" class="control-label"></label>
+                            <input asp-for="ResponseType" class="form-control" />
+                            <span asp-validation-for="ResponseType" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Scope" class="control-label"></label>
+                            <br />
+                            <textarea rows="10" asp-for="Scopes" style="width : 100%"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SigningMethod" class="control-label"></label>
+                            <select asp-for="SigningMethod" asp-items="Model.SigningMethods" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CertificateThumbprint" class="control-label"></label>
+                            <input asp-for="CertificateThumbprint" class="form-control" />
+                            <span asp-validation-for="CertificateThumbprint" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RsaKey" class="control-label"></label>
+                            <input asp-for="RsaKey" class="form-control" />
+                            <span asp-validation-for="RsaKey" contenteditable="false" class="text-danger"></span>
+                        </div>
+
+                    </div></div></div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="IdentityProvider">Forhåndsvalgt identitetstilbyder</label>
+                            <br />
+                            <select asp-for="IdentityProvider" asp-items="Model.IdentityProviders" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="OnlyLevel4" /> Bare nivå 4 hos ID-porten
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="ForceLogin" /> Deaktiver Single Signon (vis alltid innloggingsbilde i IDP)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Test IDP</h3>
+                                <div>Dette brukes bare dersom du velger å logge inn i Test IDP.</div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="TestPid">Fødselnummer du ønsker å bli autentisert som</label>
+                                    <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" aria-hidden="true" data-placement="right"
+                                          title="Dersom du ikke oppgir et fødselnummer her, vil du kunne skrive inn dette når du sendes til Test IDP.">
+                                    </span>
+                                    <input type="text" asp-for="TestPid" class="form-control" />
+                                    <br />
+                                    <span asp-validation-for="TestPid" class="text-danger"></span>
+
+                                    <label for="TestPid">Sikkerhetsnivå du ønsker å bli autentisert med</label>
+                                    <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" aria-hidden="true" data-placement="right"
+                                          title="Dersom du ikke oppgir et fødselnummer over, vil du kunne velge sikkerhetsnivå når du sendes til Test IDP.">
+                                    </span>
+                                    <br />
+                                    <select asp-for="TestSecurityLevel" asp-items="Model.SecurityLevels" class="form-control"></select>
+                                    <br />
+
+                                    <label for="TestHprNumber">HPR-nummer som skal returneres</label>
+                                    <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" aria-hidden="true" data-placement="right"
+                                          title="Dersom du ikke oppgir et HPR-nummer, vil det gjøres et normalt oppslag mot HPR for fødselnummeret.">
+                                    </span>
+                                    <br />
+                                    <input type="text" asp-for="TestHprNumber" class="form-control" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+</form>
+
+</div>
+

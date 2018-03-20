@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
-using HelseId.Common.Extensions;
+using HelseID.Common.Extensions;
 
 namespace HelseID.Common.Crypto
 {
@@ -121,7 +121,7 @@ namespace HelseID.Common.Crypto
                 using (cngKey)
                 using (RSA rsa = new RSACng(cngKey))
                 {                    
-                    return rsa.ToXmlString(false);
+                    return rsa.ToXml(false);
                 }
             }
             catch (CryptographicException e)

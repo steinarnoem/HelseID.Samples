@@ -8,24 +8,34 @@ using static HelseID.Common.Jwt.JwtGenerator;
 
 namespace HelseID.Common.Clients
 {
-    public class HelseIdClient
+    public interface IHelseIdClient {
+        Task<LoginResult> Login();
+        Task<TokenResponse> ClientCredentialsSignIn();
+        Task<TokenResponse> AcquireTokenByAuthorizationCodeAsync(string code);
+        Task<TokenResponse> AcquireTokenByRefreshToken(string refreshToken);
+        Task<TokenResponse> TokenExchange(string accessToken);
+    }
+
+    public class HelseIdClient : IHelseIdClient
     {
         private readonly HelseIdClientOptions _options;
+        private OidcClient oidcClient;
 
         public HelseIdClient(HelseIdClientOptions options)
         {
-            _options = options;
-        }
+            options.Check();
 
-        public async Task<LoginResult> Login()
-        {
+            _options = options;
             if (_options.Browser == null)
             {
                 _options.Browser = new SystemBrowser(_options.RedirectUri);
             }
+            oidcClient = new OidcClient(_options);
 
-            var oidcClient = new OidcClient(_options);
+        }
 
+        public async Task<LoginResult> Login()
+        {
             var disco = await OidcDiscoveryHelper.GetDiscoveryDocument(_options.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
@@ -69,6 +79,30 @@ namespace HelseID.Common.Clients
                 assertion?.client_assertion_type,
             };
             return payload;
+        }
+
+        public async Task<TokenResponse> AcquireTokenByAuthorizationCodeAsync(string code)
+        {
+            var disco = await OidcDiscoveryHelper.GetDiscoveryDocument(_options.Authority);
+            if (disco.IsError) throw new Exception(disco.Error);
+
+            var extraParams = GetBackChannelExtraParameters(disco);
+            var c = new TokenClient(disco.TokenEndpoint, _options.ClientId, _options.ClientSecret);
+            var result = await c.RequestAuthorizationCodeAsync(code,_options.RedirectUri, string.Empty, extraParams);
+
+            return result;
+        }
+
+        public async Task<TokenResponse> AcquireTokenByRefreshToken(string refreshToken)
+        {
+            var disco = await OidcDiscoveryHelper.GetDiscoveryDocument(_options.Authority);
+            if (disco.IsError) throw new Exception(disco.Error);
+
+            var extraParams = GetBackChannelExtraParameters(disco);
+            var c = new TokenClient(disco.TokenEndpoint, _options.ClientId, _options.ClientSecret);
+            var result = await c.RequestRefreshTokenAsync(refreshToken, extraParams);
+
+            return result;
         }
 
         private object GetFrontChannelExtraParameters()

@@ -39,8 +39,8 @@ namespace HelseID.Clients.HIDEnabler
             Console.Clear();
 
             Console.WriteLine("Creating dcr client");
-            //var client = await dcrService.CreateClient(accessToken, "client_credentials", "https://localhost/client-by-dcr", "https://pasient.no/logout", new[] { "openid", "profile", "nhn/kj" });
-            var client = await dcrService.CreateClient(accessToken, settings.GrantType, settings.RedirectUri, settings.LogoutUri, settings.Scopes.Split(' '));
+
+            var client = await dcrService.CreateClient(accessToken, settings.GrantType, settings.RedirectUri, settings.LogoutUri, settings.Scopes.FromSpaceSeparatedToList());
 
             var clientId = client.ClientId;
             Console.WriteLine("Created client with dcr api:");

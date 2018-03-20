@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelseID.Models", "HelseID.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelseID.Clients.HIDEnabler", "HelseID.Clients.HIDEnabler\HelseID.Clients.HIDEnabler.csproj", "{980733D2-7125-45A4-B6A0-E810067D0AC0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelseID.Clients.Core.MvcHybrid", "HelseID.Clients.Core.MvcHybrid\HelseID.Clients.Core.MvcHybrid.csproj", "{70714A0A-9BC9-4320-8AF3-DAD96EF0973A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelseID.Clients.Owin.MvcHybrid", "HelseID.Clients.Owin.MvcHybrid\HelseID.Clients.Owin.MvcHybrid.csproj", "{6063E356-C386-4FD8-B9CD-5722138F12B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{980733D2-7125-45A4-B6A0-E810067D0AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{980733D2-7125-45A4-B6A0-E810067D0AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{980733D2-7125-45A4-B6A0-E810067D0AC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70714A0A-9BC9-4320-8AF3-DAD96EF0973A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70714A0A-9BC9-4320-8AF3-DAD96EF0973A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70714A0A-9BC9-4320-8AF3-DAD96EF0973A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70714A0A-9BC9-4320-8AF3-DAD96EF0973A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6063E356-C386-4FD8-B9CD-5722138F12B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6063E356-C386-4FD8-B9CD-5722138F12B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6063E356-C386-4FD8-B9CD-5722138F12B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6063E356-C386-4FD8-B9CD-5722138F12B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
